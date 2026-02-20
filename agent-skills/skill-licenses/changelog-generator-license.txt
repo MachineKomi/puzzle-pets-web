@@ -1,0 +1,11 @@
+No standalone license file was found for changelog-generator at import time.
+
+Upstream repository: https://github.com/ComposioHQ/awesome-claude-skills
+Upstream commit: 27904475d1270d8395acf07691966267d5abda2d
+Checked paths:
+- LICENSE
+- LICENSE.md
+- changelog-generator/LICENSE.txt
+- changelog-generator/LICENSE
+
+Interpretation: no explicit local license text was present for this skill directory at this commit.

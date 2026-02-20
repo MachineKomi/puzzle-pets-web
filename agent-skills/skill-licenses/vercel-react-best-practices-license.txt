@@ -1,0 +1,14 @@
+No standalone LICENSE file was found in the upstream repository at import time.
+
+Upstream repository: https://github.com/vercel-labs/agent-skills
+Upstream commit: e23951b8cad2f4b1e7e176c5731127c1263fe86f
+Declared license indicators found:
+- skills/react-best-practices/SKILL.md frontmatter: license: MIT
+- README.md: License: MIT
+
+Checked paths:
+- LICENSE
+- LICENSE.md
+- skills/react-best-practices/LICENSE.txt
+
+Interpretation: MIT is declared, but no full license text file was present in-repo at this commit.

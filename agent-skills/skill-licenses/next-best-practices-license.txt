@@ -1,0 +1,11 @@
+No standalone LICENSE file was found in the upstream repository or skill directory at import time.
+
+Upstream repository: https://github.com/vercel-labs/next-skills
+Upstream commit: 038954e07bfc313e97fa5f6ff7caf87226e4a782
+Checked paths:
+- LICENSE
+- LICENSE.md
+- skills/next-best-practices/LICENSE.txt
+
+Interpretation: No explicit license text was provided in-repo for this skill at this commit.
+Treat as unlicensed unless Vercel publishes licensing terms for this repository/skill.

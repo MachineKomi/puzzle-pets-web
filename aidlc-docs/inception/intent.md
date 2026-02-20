@@ -1,0 +1,3 @@
+# Intent — Puzzle Pets
+
+Puzzle Pets is a cozy, family-friendly web puzzle game where players pick from multiple short, fun-for-all-ages puzzles (starting with Sudoku, Memory Match, and an approachable Match‑3 variant). Solving puzzles earns rewards that gently and ethically power a lightweight, asynchronous “pet raising” meta-game: collect pets, choose a companion, and watch them grow in a friendly pet arena—without any punishing timers, fear-of-missing-out mechanics, ads, or real-money gambling loops.
