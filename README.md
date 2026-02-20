@@ -1,38 +1,36 @@
-# Puzzle Pets
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Puzzle Pets is a family-friendly, low-commitment "puzzle gym" where solving short, satisfying puzzles helps you raise adorable pets in a cozy pet arena.
+## Getting Started
 
-This project is a replatform/restart of the public Godot project "Sudoku Pets" into a web app while preserving:
-- Art style + theme + "gem" visual language
-- Family-friendly, non-punishing pet philosophy
-- Ethical, parent-trustworthy design (no ads, no real-money gambling loops)
+First, run the development server:
 
-Primary goal:
-- A web app that works well on desktop + mobile (PWA-friendly), suitable for play-testing across ages (kids, adults, grandparents).
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Repo workflow
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-This repo follows an AI-SDLC / AI-DLC style workflow:
-- Plan-first, small batches, proof-based validation
-- Requirements -> units -> code -> evidence (traceability)
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Start here:
-- `aidlc-docs/aidlc-state.md` (current phase/status)
-- `aidlc-docs/execution-plan.md` (approved plan + unit gates)
-- `aidlc-docs/inception/*` (inception artifacts)
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Development (planned)
+## Learn More
 
-> Note: code scaffold is built during Construction Unit U0.
+To learn more about Next.js, take a look at the following resources:
 
-Expected workflow:
-- Node.js LTS
-- pnpm
-- `pnpm dev` for local dev
-- `pnpm test` for unit tests
-- `pnpm exec playwright test` for e2e
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## License
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Puzzle Pets intends to continue with an MIT-style license consistent with the legacy repo's stated license posture.
-Confirm asset ownership + licensing before any public release.
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

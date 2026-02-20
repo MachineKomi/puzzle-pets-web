@@ -1,169 +1,49 @@
-# Execution Plan — Puzzle Pets (AI‑DLC)
+# Execution Plan: Web App MVP
 
-This plan decomposes work into small, independently verifiable units with explicit gates.
+## Overview
+This plan defines the execution units for the Web MVP vertical slice, replatforming Puzzle Pets to Next.js while reusing legacy assets.
 
-## Phase A — Inception (WHAT + WHY)
+## Units
 
-### A0 — Discovery & Analysis (legacy intake)
-**Goal:** Extract “Puzzle Pets DNA” from legacy repo (art, design philosophy, gameplay loops).  
-**Outputs:**
-- `aidlc-docs/inception/legacy-sudoku-pets-review.md`
-- `aidlc-docs/inception/asset-migration-plan.md`
+### U0: Scaffolding & CI/CD
+- **Scope**: Initialize Next.js project with App Router, TypeScript, pnpm. Configure Tailwind, Zustand, and ESLint/Prettier. Setup Vercel deployment.
+- **Acceptance Criteria**: 
+  - `pnpm dev` starts without errors. 
+  - `pnpm lint` and `pnpm build` pass.
+  - Vercel deployment succeeds (manual trigger/setup confirmed).
+- **Dependencies**: None.
+- **Evidence**:
+  - Command: `pnpm run lint && pnpm run build` (Exit code 0)
+  - Vercel auto-deploy checkpoint: Human step to link repo and provide deployment URL.
 
-**Gate A0 exit criteria:**
-- Inventory of legacy assets + intended reuse approach
-- Clear list of “must preserve” design principles
+### U1: Asset Migration & Design System
+- **Scope**: Port art assets from legacy repo. Implement Tailwind CSS variables/tokens matching the legacy art style and theme. Build core UI components (buttons, modals).
+- **Acceptance Criteria**: Assets load correctly in a test page; UI components match Godot aesthetics.
+- **Dependencies**: U0.
+- **Evidence**:
+  - Command: `pnpm run lint`
+  - Visual validation of Storybook/Test page (Human verification).
 
-### A1 — Requirements & scope
-**Goal:** Convert intent into testable requirements and a scoped MVP.  
-**Outputs:**
-- `requirements.md`, `nfrs.md`, `game-design.md`, `puzzle-catalog.md`
-- `success-metrics.md`
-- `risks.md`
+### U2: Core Puzzle Engine (Sudoku & Memory)
+- **Scope**: Implement 4x4 and 6x6 Sudoku logic (generation, validation). Implement Memory Match logic. Build UI for both puzzles.
+- **Acceptance Criteria**: Puzzles can be played from start to win state. Errors highlight correctly in Sudoku. Matches validate in Memory Match.
+- **Dependencies**: U1.
+- **Evidence**:
+  - Command: `pnpm test:unit` (running Vitest/Jest for puzzle logic functions) -> 100% pass rate.
+  - Visual verification of puzzle completion.
 
-**Gate A1 exit criteria (Inception Approved):**
-- MVP scope agreed
-- FR/NFR reviewed
-- Risks acknowledged + mitigations planned
-- Units-of-work accepted
-- Decision log started (`aidlc-docs/audit.md`)
+### U3: Progression & State Management (Zustand + IndexedDB)
+- **Scope**: Implement Zustand stores for user currency/rewards, pet unlocking, and progression. Implement IndexedDB persistence wrapper with versioned migrations for save data.
+- **Acceptance Criteria**: Completing a puzzle awards currency. Currency can be spent to unlock a pet. Refreshing the browser preserves state.
+- **Dependencies**: U2.
+- **Evidence**:
+  - Command: `pnpm test:integration` (testing IndexedDB wrapper & Zustand state).
+  - Browser load/reload test (persistence check).
 
----
-
-## Phase B — Construction (HOW)
-
-Each unit produces:
-- Small diffs
-- Tests
-- Evidence commands output
-- A validation report under `aidlc-docs/construction/<unit>/validation-report.md`
-
-### U0 — Repo bootstrap (web)
-**Deliverables**
-- Next.js + TypeScript scaffold
-- Code quality: ESLint/Prettier, strict TS
-- Test harness: Vitest + RTL
-- E2E harness: Playwright
-- CI workflow: lint/typecheck/test/build
-
-**Evidence**
-- `pnpm lint`
-- `pnpm typecheck`
-- `pnpm test`
-- `pnpm build`
-- `pnpm exec playwright test` (basic smoke)
-
-### U1 — Asset ingestion + UI theme tokens
-**Deliverables**
-- `public/assets/` structure
-- Asset manifest + usage mapping
-- Theme tokens: colors, spacing, typography
-- “Gem” visual primitives shared across puzzles
-
-**Evidence**
-- Visual snapshot tests (if used)
-- Manual mobile check
-- Build passes
-
-### U2 — App shell + navigation + profiles
-**Deliverables**
-- Responsive app shell
-- Puzzle Select screen
-- Pet Arena hub screen (empty state OK)
-- Settings screen
-- Local profiles (kid/parent/grandparent)
-
-**Evidence**
-- Playwright navigation flow tests
-
-### U3 — Persistence + migrations
-**Deliverables**
-- Versioned save schema
-- IndexedDB persistence + migration framework
-- Autosave triggers
-
-**Evidence**
-- Unit tests for migrations
-- Playwright: refresh retains state
-
-### U4 — Puzzle framework (plugin architecture)
-**Deliverables**
-- Puzzle interface contract
-- Session recorder (moves, undo, timer)
-- Reward calculator contract
-- Shared puzzle UI scaffolding
-
-**Evidence**
-- Unit tests: deterministic seeds, undo correctness
-
-### U5 — Sudoku (ported design intent)
-**Deliverables**
-- Sudoku generator/validator (seeded)
-- 4x4 / 6x6 / 9x9 (MVP can start with 4x4 + 6x6)
-- Notes mode, hint v1 (naked singles)
-- Gem visuals + optional “Zen” theme
-
-**Evidence**
-- Unit tests: validator invariants
-- Playwright: solve flow + reward
-
-### U6 — Pet meta-game v1
-**Deliverables**
-- Pet collection + companion selection
-- Rewards feed into pet XP
-- Pet interactions (tap/feed/play) non-punishing
-- Simple “arena” visualization (no competitive logic)
-
-**Evidence**
-- Playwright: solve puzzle → pet XP increases
-
-### U7 — Memory Match puzzle
-**Deliverables**
-- Memory tiles puzzle plugin
-- Difficulty scaling: grid size, time assist, “peek” helper
-- Rewards consistent with framework
-
-**Evidence**
-- Unit tests for matching logic
-- Playwright: complete session
-
-### U8 — Match-3 variant (early)
-**Deliverables**
-- Match-3 plugin (swap or drag-path variant)
-- Combos + special pieces (minimal set)
-- Accessibility: shape + color support
-
-**Evidence**
-- Deterministic board generation tests
-- Playwright: basic match clears
-
-### U9 — PWA + offline hardening
-**Deliverables**
-- Service worker caching
-- Offline-first behavior validated
-- Installable on mobile
-
-**Evidence**
-- Playwright/offline mode checks (where feasible)
-- Manual install check
-
-### U10 — Release readiness
-**Deliverables**
-- Performance budget checks
-- Accessibility checks
-- Content safety + parent-trust checklist
-- Release notes + changelog
-
-**Evidence**
-- Lighthouse run outputs (documented)
-- A11y audit notes
-- CI green
-
----
-
-## Phase C — Operations (RUN)
-
-- Vercel deployment config
-- Observability (minimal, privacy-respecting)
-- Runbook and rollback notes
-- Cost model (near-zero baseline for static hosting)
+### U4: MVP Polish & Final Vertical Slice Assembly
+- **Scope**: Connect loops: Main Menu -> Select Puzzle -> Complete Puzzle -> Reward -> Pet Screen (Progression). Add micro-animations and final styling polish.
+- **Acceptance Criteria**: The complete end-to-end loop runs seamlessly. Visuals match legacy art style without missing assets.
+- **Dependencies**: U3.
+- **Evidence**:
+  - Command: `pnpm run e2e` (Playwright/Cypress basic flow test) -> passes.
+  - Final human playthrough in staging environment.

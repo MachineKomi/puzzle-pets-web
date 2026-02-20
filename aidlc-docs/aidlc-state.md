@@ -1,34 +1,12 @@
-# AI‑DLC State — Puzzle Pets
+# AI-SDLC State
 
-**Last updated:** 2026-02-20  
-**Timezone:** Europe/London
+## Context Classification
+**Mixed (Brownfield/Greenfield)**
+- Greenfield: Completely new web stack (Next.js, TypeScript).
+- Brownfield: Strict constraint to reuse existing art assets, art style, theme, and design principles from the legacy Godot repo (Sudoku-Pets).
 
-## Project info
-- **Working title:** Puzzle Pets
-- **Type:** Replatform/restart (Godot → Web)
-- **Goal:** Desktop + mobile web app (PWA-capable), designed for ages 4+ and family play-testing.
-- **Legacy input repo:** MachineKomi/Sudoku-Pets (Godot)
+## Current Phase
+**Moving from Inception to Construction - PENDING APPROVAL**
 
-## Current status
-- **Phase:** INCEPTION
-- **Stage:** Discovery + Inception Draft (seed artifacts created)
-- **Blockers:** None known, but licensing/asset review is a required gate before public release.
-
-## What changed most recently
-- Created inception artifacts under `aidlc-docs/inception/`
-- Created a unitized execution plan with proof-based gates
-- Documented legacy repo review + migration plan
-- Curated agent skills list
-
-## Next checkpoint (approval gate)
-**Gate: Inception Approved**
-Approval criteria:
-- Requirements (FR/NFR) accepted
-- MVP scope accepted
-- Architecture + stack accepted
-- Units-of-work accepted
-- Risks reviewed
-
-## Next stage after approval
-**CONSTRUCTION**
-Start Unit U0: repo bootstrap (Next.js scaffold + CI + basic shell).
+## State Overview
+Replatforming the existing Godot MVP to a Web App MVP representing a vertical slice of gameplay (puzzle -> reward -> pet progression -> persistence -> deploy).
