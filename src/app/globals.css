@@ -13,43 +13,46 @@
 
 /* Base configuration (Normal Theme) */
 :root {
-  --background: #f4f4f5; /* Light gray background */
-  --foreground: #171717; /* Dark text */
-  --panel: #ffffff;      /* White cards */
-  --primary: #3b82f6;    /* Blue 500 */
-  --primary-hover: #2563eb; /* Blue 600 */
-  --accent: #f59e0b;     /* Amber 500 */
-  --danger: #ef4444;     /* Red 500 */
-  --focus-ring: #60a5fa; /* Blue 400 */
+  --background: #f4f4f5;
+  /* Light gray background */
+  --foreground: #171717;
+  /* Dark text */
+  --panel: #ffffff;
+  /* White cards */
+  --primary: #3b82f6;
+  /* Blue 500 */
+  --primary-hover: #2563eb;
+  /* Blue 600 */
+  --accent: #f59e0b;
+  /* Amber 500 */
+  --danger: #ef4444;
+  /* Red 500 */
+  --focus-ring: #60a5fa;
+  /* Blue 400 */
 }
 
 /* Zen Theme */
 [data-theme='zen'] {
-  --background: #fdfbf7; /* Warm off-white */
-  --foreground: #4a4a4a; /* Soft dark gray */
+  --background: #fdfbf7;
+  /* Warm off-white */
+  --foreground: #4a4a4a;
+  /* Soft dark gray */
   --panel: #ffffff;
-  --primary: #10b981;    /* Emerald 500 for a calm feel */
-  --primary-hover: #059669; /* Emerald 600 */
-  --accent: #fbbf24;     /* Amber 400 */
-  --danger: #f87171;     /* Red 400 */
-  --focus-ring: #34d399; /* Emerald 400 */
-  
+  --primary: #10b981;
+  /* Emerald 500 for a calm feel */
+  --primary-hover: #059669;
+  /* Emerald 600 */
+  --accent: #fbbf24;
+  /* Amber 400 */
+  --danger: #f87171;
+  /* Red 400 */
+  --focus-ring: #34d399;
+  /* Emerald 400 */
+
   /* Additional Zen specific tokens could go here (e.g., textures) */
 }
 
-/* Dark Mode Fallback (Optional but good practice) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='zen']) {
-    --background: #171717;
-    --foreground: #f4f4f5;
-    --panel: #262626;
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
-    --accent: #fbbf24;
-    --danger: #f87171;
-    --focus-ring: #3b82f6;
-  }
-}
+
 
 body {
   background-color: var(--background);
