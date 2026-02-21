@@ -4,6 +4,7 @@
   "gems/gem_10_draftnote": "/assets/gems/gem_10_draftnote.png",
   "gems/gem_10_glowing": "/assets/gems/gem_10_glowing.png",
   "gems/gem_1_draftnote": "/assets/gems/gem_1_draftnote.png",
+  "gems/gem_1_glowing": "/assets/gems/gem_1_glowing.png",
   "gems/gem_2": "/assets/gems/gem_2.png",
   "gems/gem_2_draftnote": "/assets/gems/gem_2_draftnote.png",
   "gems/gem_2_glowing": "/assets/gems/gem_2_glowing.png",
@@ -40,5 +41,6 @@
   "sfx/companion_hurt": "/assets/sfx/companion_hurt.wav",
   "sfx/dagger_throw": "/assets/sfx/dagger_throw.wav",
   "sfx/earthquake_hit": "/assets/sfx/earthquake_hit.wav",
-  "sfx/slime_hit": "/assets/sfx/slime_hit.wav"
+  "sfx/slime_hit": "/assets/sfx/slime_hit.wav",
+  "ui/puzzle_pets_arena_logo": "/assets/ui/puzzle_pets_arena_logo.png"
 }

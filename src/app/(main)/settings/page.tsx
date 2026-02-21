@@ -92,7 +92,7 @@ export default function SettingsPage() {
             </Modal>
 
             <div className="text-center text-sm text-foreground/50 mt-12">
-                <p>Puzzle Pets MVPaidlc-v1.0</p>
+                <p>Puzzle Pets Arena MVP - aidlc-v1.0</p>
             </div>
         </div>
     );

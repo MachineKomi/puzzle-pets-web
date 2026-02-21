@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Icon } from '@/components/ui/Icon';
 
 export const Navigation = () => {
     const pathname = usePathname();
@@ -35,8 +36,9 @@ export const Navigation = () => {
 
             {/* Desktop/Tablet Side/Top Nav (hidden on mobile) */}
             <aside className="hidden sm:flex flex-col w-64 bg-panel border-r border-black/10 dark:border-white/10 h-screen sticky top-0 p-4">
-                <div className="text-2xl font-bold text-center mb-8 text-primary shadow-sm py-4 border-b border-black/5">
-                    Puzzle Pets
+                <div className="flex flex-col items-center justify-center mb-8 shadow-sm py-4 border-b border-black/5 gap-2">
+                    <Icon assetKey="ui/puzzle_pets_arena_logo" size="lg" className="w-32 h-auto" />
+                    <span className="text-xl font-bold text-primary text-center">Puzzle Pets Arena</span>
                 </div>
                 <nav className="flex flex-col gap-2">
                     {links.map((link) => {
@@ -46,8 +48,8 @@ export const Navigation = () => {
                                 key={link.path}
                                 href={link.path}
                                 className={`flex items-center gap-4 p-4 rounded-xl transition-all ${isActive
-                                        ? 'bg-primary/10 text-primary font-bold shadow-sm'
-                                        : 'text-foreground hover:bg-black/5 dark:hover:bg-white/5'
+                                    ? 'bg-primary/10 text-primary font-bold shadow-sm'
+                                    : 'text-foreground hover:bg-black/5 dark:hover:bg-white/5'
                                     }`}
                             >
                                 <span className="text-2xl">{link.icon}</span>
