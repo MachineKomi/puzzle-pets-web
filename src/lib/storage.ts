@@ -9,7 +9,7 @@ export interface SaveData {
     profile: {
         id: string;
         createdAt: number;
-        settings: Record<string, any>;
+        settings: Record<string, unknown>;
     };
     wallet: {
         coins: number;
@@ -24,6 +24,7 @@ export interface SaveData {
     puzzles: {
         completedCount: number;
         bestStats: Record<string, { stars: number; time: number }>; // e.g. 'sudoku_4x4' -> { stars: 3, time: 120 }
+        activeSession: import('./puzzle/types').PuzzleSession | null;
     };
 }
 
@@ -44,6 +45,7 @@ export const INITIAL_SAVE_DATA: SaveData = {
     puzzles: {
         completedCount: 0,
         bestStats: {},
+        activeSession: null,
     },
 };
 
@@ -52,7 +54,7 @@ export const INITIAL_SAVE_DATA: SaveData = {
  */
 async function initDB(): Promise<IDBPDatabase> {
     return openDB(DB_NAME, DB_VERSION, {
-        upgrade(db, oldVersion, newVersion, transaction) {
+        upgrade(db, _oldVersion, _newVersion, _transaction) {
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 db.createObjectStore(STORE_NAME);
             }

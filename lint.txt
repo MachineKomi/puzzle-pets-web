@@ -1,0 +1,14 @@
+﻿
+> temp-next-app@0.1.0 lint C:\GameDev\puzzle-pets
+> eslint
+
+
+C:\GameDev\puzzle-pets\src\lib\storage.ts
+  12:34  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:21  warning  'oldVersion' is defined but never used    @typescript-eslint/no-unused-vars
+  57:33  warning  'newVersion' is defined but never used    @typescript-eslint/no-unused-vars
+  57:45  warning  'transaction' is defined but never used   @typescript-eslint/no-unused-vars
+
+Γ£û 4 problems (1 error, 3 warnings)
+
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 1.

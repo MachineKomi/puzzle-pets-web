@@ -32,3 +32,10 @@
 - **SSR Hydration**: Wrapped React nodes to gracefully await DB read on cold-boots preventing hydration mismatches.
 - **Unit Assertions**: Successfully scaffolded Vitest framework. Wrote spec files validating XP thresholds, coin additions, and db wipes via mocked abstractions.
 
+
+## [Date: 2026-02-21] - U4 Completion
+- **Puzzle Domains**: Architected PuzzleResult and PuzzleSession interfaces enabling standardized entry/exit routines for any future minigames.
+- **Reward Engine**: Implemented mathematical scaling distributing Coins and Pet XP proportional to player performance and difficulty type.
+- **React Hooks**: Bound the Session Lifecycles (start, resume, abandon, complete) to usePuzzleSession manipulating Zustand directly.
+- **Event Logger**: Designed local memory sink SessionLogger to trace sequence breaks seamlessly without spamming IDB.
+

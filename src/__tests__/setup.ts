@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // Minimal mock for IndexedDB (idb wrapper) so our store tests pass in Node/jsdom
-const mockDb: Record<string, any> = {};
+const mockDb: Record<string, unknown> = {};
 
 vi.mock('idb', () => ({
     openDB: vi.fn().mockResolvedValue({

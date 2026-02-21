@@ -13,6 +13,7 @@ interface GameState extends SaveData {
     unlockPet: (petId: string) => void;
     setActivePet: (petId: string) => void;
     recordPuzzleCompletion: (puzzleType: string, stars: number, time: number) => void;
+    setActiveSession: (session: import('@/lib/puzzle/types').PuzzleSession | null) => void;
     resetSaveData: () => Promise<void>;
 }
 
@@ -113,6 +114,14 @@ export const useGameStore = create<GameState>((set) => ({
                 }
             };
 
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+    },
+
+    setActiveSession: (session: import('@/lib/puzzle/types').PuzzleSession | null) => {
+        set((state) => {
+            const newState = { puzzles: { ...state.puzzles, activeSession: session } };
             debouncedSave({ ...state, ...newState });
             return newState;
         });

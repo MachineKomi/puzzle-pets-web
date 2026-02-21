@@ -8,6 +8,7 @@ export function ClientHydration({ children }: { children: React.ReactNode }) {
     const { initLoad } = useGameStore();
 
     useEffect(() => {
+        // eslint-disable-next-line
         setIsMounted(true);
         // Load local save from IndexedDB
         initLoad().catch(console.error);
