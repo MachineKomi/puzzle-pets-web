@@ -5,44 +5,61 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { SudokuEngine } from './SudokuEngine';
-import { SudokuTrack, TRACK_LEVELS } from './SudokuTrack';
+import { SudokuTrack } from './SudokuTrack';
 import { usePuzzleSession } from '@/hooks/usePuzzleSession';
 import { useGameStore } from '@/store/game';
 import { PuzzleResultsModal } from '@/components/puzzle/PuzzleResultsModal';
+import { PuzzleResult } from '@/lib/puzzle/types';
+import { CalculatedReward } from '@/lib/puzzle/rewards';
 
 export default function SudokuPage() {
-    const { activeSession, abandonSession, showResults, setShowResults, lastResult } = usePuzzleSession('sudoku');
+    const { activeSession, abandonSession } = usePuzzleSession('sudoku');
     const advanceSudokuTrack = useGameStore(state => state.advanceSudokuTrack);
 
     // Local pre-game configuration state
     const [config, setConfig] = useState<{ level: number; size: 4 | 6; diff: 'easy' | 'medium' | 'hard' } | null>(null);
+
+    // Results modal state — managed locally, fed by SudokuEngine's onComplete callback
+    const [showResults, setShowResults] = useState(false);
+    const [completedResult, setCompletedResult] = useState<{ result: PuzzleResult; reward: CalculatedReward } | null>(null);
 
     // Handle track level selection
     const handleSelectLevel = useCallback((level: number, size: 4 | 6, diff: 'easy' | 'medium' | 'hard') => {
         setConfig({ level, size, diff });
     }, []);
 
+    // Called by SudokuEngine when the puzzle is completed
+    const handleComplete = useCallback((result: PuzzleResult, reward: CalculatedReward) => {
+        setCompletedResult({ result, reward });
+        setShowResults(true);
+    }, []);
+
     // Handle results modal close -> advance track and return to track view
     const handleResultsClose = useCallback(() => {
-        if (lastResult?.result.won && config?.level) {
-            advanceSudokuTrack(config.level, lastResult.result.stars);
+        if (completedResult?.result.won && config?.level) {
+            advanceSudokuTrack(config.level, completedResult.result.stars);
         }
         setShowResults(false);
+        setCompletedResult(null);
         setConfig(null); // Return to track view
-    }, [lastResult, config, advanceSudokuTrack, setShowResults]);
+    }, [completedResult, config, advanceSudokuTrack]);
 
     // If a session is active (or config is chosen), render engine
     if (activeSession?.puzzleId === 'sudoku' || config) {
         return (
             <div className="max-w-3xl mx-auto w-full pt-4">
-                <SudokuEngine gridSize={config?.size || 4} difficulty={config?.diff || 'easy'} />
+                <SudokuEngine
+                    gridSize={config?.size || 4}
+                    difficulty={config?.diff || 'easy'}
+                    onComplete={handleComplete}
+                />
 
-                {/* Results Modal — lives at page level so it persists across session lifecycle */}
+                {/* Results Modal — managed by page via onComplete callback */}
                 <PuzzleResultsModal
                     isOpen={showResults}
                     onClose={handleResultsClose}
-                    result={lastResult?.result || null}
-                    reward={lastResult?.reward || null}
+                    result={completedResult?.result || null}
+                    reward={completedResult?.reward || null}
                 />
             </div>
         );

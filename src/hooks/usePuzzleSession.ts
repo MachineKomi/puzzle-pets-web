@@ -47,7 +47,7 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
      * Completes the current session, calculates rewards, records completion, and clears active state.
      */
     const completeSession = useCallback((result: PuzzleResult) => {
-        if (!activeSession) return;
+        if (!activeSession) return { reward: null };
 
         sessionLogger.log({ eventType: 'complete', sessionId: activeSession.id, details: { result } });
 
@@ -70,6 +70,8 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
         // 4. Trigger UI modal
         setLastResult({ result, reward });
         setShowResults(true);
+
+        return { reward };
     }, [activeSession, store]);
 
     /**

@@ -7,8 +7,10 @@ test.describe('Sudoku MVP Integration', () => {
     });
 
     test('can start a 4x4 puzzle, select a cell, and input a note', async ({ page }) => {
-        // Click Track Level 1 (first available level on the puzzle track)
-        const levelButton = page.getByRole('button', { name: '1' }).first();
+        // Wait for the track to render — find the current level (PLAY button, level 1).
+        // The track auto-scrolls to the current level.
+        const levelButton = page.locator('button:has-text("PLAY")').first();
+        await expect(levelButton).toBeVisible({ timeout: 5000 });
         await levelButton.click();
 
         // Ensure Sudoku grid rendered

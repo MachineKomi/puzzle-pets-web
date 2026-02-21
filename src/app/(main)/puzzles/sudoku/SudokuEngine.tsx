@@ -30,9 +30,10 @@ const getBlockIndices = (r: number, c: number, size: 4 | 6) => {
 interface SudokuEngineProps {
     difficulty: 'easy' | 'medium' | 'hard';
     gridSize: 4 | 6;
+    onComplete?: (result: import('@/lib/puzzle/types').PuzzleResult, reward: import('@/lib/puzzle/rewards').CalculatedReward) => void;
 }
 
-export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize }) => {
+export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize, onComplete }) => {
     const { activeSession, startSession, completeSession, abandonSession, logEvent } = usePuzzleSession('sudoku');
 
     const [selectedCell, setSelectedCell] = useState<{ r: number, c: number } | null>(null);
@@ -114,15 +115,19 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
             }
         }
         if (isComplete) {
-            completeSession({
+            const result = {
                 won: true,
                 stars: state!.mistakes === 0 ? 3 : state!.mistakes <= 2 ? 2 : 1,
                 mistakes: state!.mistakes,
                 durationMs: Date.now() - activeSession.startedAt,
                 metadata: { difficulty, gridSize }
-            });
+            };
+            const { reward } = completeSession(result);
+            if (onComplete && reward) {
+                onComplete(result, reward);
+            }
         }
-    }, [activeSession, gridSize, state, difficulty, completeSession]);
+    }, [activeSession, gridSize, state, difficulty, completeSession, onComplete]);
 
     const handleHint = useCallback(() => {
         if (!state) return;
