@@ -37,8 +37,7 @@ export const Navigation = () => {
             {/* Desktop/Tablet Side/Top Nav (hidden on mobile) */}
             <aside className="hidden sm:flex flex-col w-64 bg-panel border-r border-black/10 dark:border-white/10 h-screen sticky top-0 p-4">
                 <div className="flex flex-col items-center justify-center mb-8 shadow-sm py-4 border-b border-black/5 gap-2">
-                    <Icon assetKey="ui/puzzle_pets_arena_logo" size="lg" className="w-32 h-auto" />
-                    <span className="text-xl font-bold text-primary text-center">Puzzle Pets Arena</span>
+                    <Icon assetKey="ui/puzzle_pets_arena_logo" className="w-[80%] h-auto max-w-[200px]" />
                 </div>
                 <nav className="flex flex-col gap-2">
                     {links.map((link) => {

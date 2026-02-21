@@ -159,10 +159,10 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
     if (!activeSession || !state) return <div className="p-8 text-center animate-pulse">Loading Sudoku...</div>;
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in zoom-in duration-500 pb-12">
+        <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] animate-in fade-in zoom-in duration-500 pb-4">
 
             {/* Header Info */}
-            <div className="flex justify-between items-center bg-panel p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5">
+            <div className="flex justify-between items-center bg-panel p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5 shrink-0 mb-4">
                 <div>
                     <div className="text-sm text-foreground/70 uppercase tracking-wider font-bold">
                         {gridSize}x{gridSize} • {difficulty}
@@ -178,20 +178,28 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
             </div>
 
-            <SudokuGrid
-                grid={state.grid}
-                size={gridSize}
-                selectedCell={selectedCell}
-                onCellClick={handleCellClick}
-            />
+            <div className="flex flex-col lg:flex-row gap-6 flex-1 items-center justify-center min-h-0">
+                {/* Main Grid Area */}
+                <div className="flex-1 w-full h-full flex items-center justify-center min-h-0">
+                    <SudokuGrid
+                        grid={state.grid}
+                        size={gridSize}
+                        selectedCell={selectedCell}
+                        onCellClick={handleCellClick}
+                    />
+                </div>
 
-            <NumberPad
-                size={gridSize}
-                onNumberSelect={(num) => handleInput(num)}
-                onErase={() => handleInput(null)}
-                isNotesMode={isNotesMode}
-                onToggleNotes={() => setIsNotesMode(!isNotesMode)}
-            />
+                {/* Input Controls Area */}
+                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center">
+                    <NumberPad
+                        size={gridSize}
+                        onNumberSelect={(num) => handleInput(num)}
+                        onErase={() => handleInput(null)}
+                        isNotesMode={isNotesMode}
+                        onToggleNotes={() => setIsNotesMode(!isNotesMode)}
+                    />
+                </div>
+            </div>
 
         </div>
     );

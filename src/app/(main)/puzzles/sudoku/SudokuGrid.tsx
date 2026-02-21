@@ -27,7 +27,7 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell
     const blockCols = size === 4 ? 2 : 3;
 
     return (
-        <div className={`grid ${gridClass} gap-1 bg-black/20 dark:bg-white/20 p-1 rounded-xl shadow-inner max-w-[400px] mx-auto`}>
+        <div className={`grid ${gridClass} gap-1 bg-black/20 dark:bg-white/20 p-2 sm:p-3 rounded-xl shadow-inner w-full h-full max-w-[min(100%,80vh)] max-h-[min(100%,80vw)] aspect-square mx-auto`}>
             {grid.map((row, rIdx) =>
                 row.map((cell, cIdx) => {
                     const isSelected = selectedCell?.r === rIdx && selectedCell?.c === cIdx;
@@ -51,7 +51,7 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell
                             key={`${rIdx}-${cIdx}`}
                             aria-label={`Cell ${rIdx}-${cIdx}`}
                             className={`
-                aspect-square flex items-center justify-center text-2xl sm:text-3xl transition-colors relative
+                aspect-square w-full h-full flex items-center justify-center transition-colors relative
                 ${bgClass} ${textClass} ${borderRight} ${borderBottom}
                 // Rounded corners on the extremes
                 ${rIdx === 0 && cIdx === 0 ? 'rounded-tl-lg' : ''}

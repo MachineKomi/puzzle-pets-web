@@ -17,7 +17,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({ size, onNumberSelect, onEr
     const numbers = Array.from({ length: size }, (_, i) => i + 1);
 
     return (
-        <div className="flex flex-col gap-4 mt-8 w-full max-w-[400px] mx-auto">
+        <div className="flex flex-col gap-4 w-full max-w-[400px] mx-auto">
             {/* Number Buttons Row */}
             <div className="flex gap-2 justify-center flex-wrap">
                 {numbers.map(num => (
