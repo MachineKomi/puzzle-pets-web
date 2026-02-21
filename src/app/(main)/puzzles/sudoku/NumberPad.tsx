@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { GEM_MAP } from './SudokuGrid';
+import { GEM_MAP, GEM_DRAFT_MAP } from './SudokuGrid';
 
 interface NumberPadProps {
     size: 4 | 6;
@@ -29,7 +29,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({ size, onNumberSelect, onEr
                         onClick={() => onNumberSelect(num)}
                     >
                         <div className="w-full h-full drop-shadow-sm pointer-events-none flex items-center justify-center">
-                            <Icon assetKey={GEM_MAP[num] as string} />
+                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} />
                         </div>
                     </Button>
                 ))}

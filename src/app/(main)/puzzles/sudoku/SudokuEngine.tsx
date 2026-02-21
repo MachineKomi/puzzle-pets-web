@@ -7,6 +7,22 @@ import { SudokuState, SudokuCell } from '@/lib/puzzle/sudoku/types';
 import { SudokuGrid } from './SudokuGrid';
 import { NumberPad } from './NumberPad';
 import { Button } from '@/components/ui/Button';
+import JSConfetti from 'js-confetti';
+
+const getBlockIndices = (r: number, c: number, size: 4 | 6) => {
+    const blockRows = 2;
+    const blockCols = size === 4 ? 2 : 3;
+    const startRow = Math.floor(r / blockRows) * blockRows;
+    const startCol = Math.floor(c / blockCols) * blockCols;
+
+    const indices: { r: number, c: number }[] = [];
+    for (let i = 0; i < blockRows; i++) {
+        for (let j = 0; j < blockCols; j++) {
+            indices.push({ r: startRow + i, c: startCol + j });
+        }
+    }
+    return indices;
+};
 
 interface SudokuEngineProps {
     difficulty: 'easy' | 'medium' | 'hard';
@@ -18,6 +34,9 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
     const [selectedCell, setSelectedCell] = useState<{ r: number, c: number } | null>(null);
     const [isNotesMode, setIsNotesMode] = useState(false);
+
+    const [recentlyPlaced, setRecentlyPlaced] = useState<{ r: number, c: number } | null>(null);
+    const [completedCells, setCompletedCells] = useState<{ r: number, c: number }[]>([]);
 
     // Undo stack keeping historical versions of the grid
     const [history, setHistory] = useState<SudokuCell[][][]>([]);
@@ -143,6 +162,11 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
             } else {
                 cell.isError = false;
                 cell.notes = []; // Clear notes if placed
+
+                // Track newly placed cell for simple thumping
+                setRecentlyPlaced({ r, c });
+                setTimeout(() => setRecentlyPlaced(null), 300);
+
                 if (num !== null) logEvent('correct_input', { row: r, col: c, value: num });
             }
             newGrid[r][c] = cell;
@@ -152,9 +176,62 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
         state.grid = newGrid;
         setSelectedCell({ r, c });
 
+        if (!isNotesMode && num !== null && num === targetCell.solution) {
+            // Check for row/col/block completion
+            let isRowComplete = true;
+            let isColComplete = true;
+            let isBlockComplete = true;
+
+            const newCompleted: { r: number, c: number }[] = [];
+
+            // Check Row
+            for (let i = 0; i < gridSize; i++) {
+                if (newGrid[r][i].value !== newGrid[r][i].solution) isRowComplete = false;
+            }
+            if (isRowComplete) {
+                for (let i = 0; i < gridSize; i++) newCompleted.push({ r, c: i });
+            }
+
+            // Check Col
+            for (let i = 0; i < gridSize; i++) {
+                if (newGrid[i][c].value !== newGrid[i][c].solution) isColComplete = false;
+            }
+            if (isColComplete) {
+                for (let i = 0; i < gridSize; i++) newCompleted.push({ r: i, c });
+            }
+
+            // Check Block
+            const blockIndices = getBlockIndices(r, c, gridSize);
+            for (const idx of blockIndices) {
+                if (newGrid[idx.r][idx.c].value !== newGrid[idx.r][idx.c].solution) isBlockComplete = false;
+            }
+            if (isBlockComplete) {
+                newCompleted.push(...blockIndices);
+            }
+
+            if (newCompleted.length > 0) {
+                setCompletedCells(prev => {
+                    const merged = [...prev];
+                    newCompleted.forEach(nc => {
+                        if (!merged.some(m => m.r === nc.r && m.c === nc.c)) {
+                            merged.push(nc);
+                        }
+                    });
+                    return merged;
+                });
+
+                // Fire fireworks using js-confetti
+                const confetti = new JSConfetti();
+                confetti.addConfetti({
+                    emojis: ['💎', '✨', '🐾', '🌟'],
+                    confettiNumber: 40,
+                });
+            }
+        }
+
         if (!isNotesMode) checkWin(newGrid);
 
-    }, [state, selectedCell, activeSession, isNotesMode, pushHistory, logEvent, checkWin]);
+    }, [state, selectedCell, activeSession, isNotesMode, pushHistory, logEvent, gridSize, checkWin]);
 
     if (!activeSession || !state) return <div className="p-8 text-center animate-pulse">Loading Sudoku...</div>;
 
@@ -186,6 +263,8 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                         size={gridSize}
                         selectedCell={selectedCell}
                         onCellClick={handleCellClick}
+                        recentlyPlaced={recentlyPlaced}
+                        completedCells={completedCells}
                     />
                 </div>
 

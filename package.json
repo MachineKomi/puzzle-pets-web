@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "idb": "^8.0.3",
+    "js-confetti": "^0.13.1",
     "lodash.debounce": "^4.0.8",
     "next": "16.1.6",
     "react": "19.2.3",
