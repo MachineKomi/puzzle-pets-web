@@ -20,13 +20,13 @@ export default function HomePage() {
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Link href="/puzzles" className="contents">
                     <div className="flex flex-col items-center justify-center p-8 bg-primary text-white rounded-2xl shadow-md hover:bg-primary-hover hover:scale-105 hover:-rotate-1 transition-all duration-300 font-bold text-2xl group cursor-pointer">
-                        <span className="text-5xl mb-4 group-hover:animate-bounce">🧩</span>
+                        <Icon assetKey="ui/puzzles_icon" className="w-16 h-16 mb-4 group-hover:animate-bounce" />
                         Play Puzzles
                     </div>
                 </Link>
                 <Link href="/pets" className="contents">
                     <div className="flex flex-col items-center justify-center p-8 bg-accent text-white rounded-2xl shadow-md hover:brightness-110 hover:scale-105 hover:rotate-1 transition-all duration-300 font-bold text-2xl group cursor-pointer">
-                        <span className="text-5xl mb-4 group-hover:scale-110 transition-transform">🐾</span>
+                        <Icon assetKey="ui/pets_icon" className="w-16 h-16 mb-4 group-hover:scale-110 transition-transform" />
                         Pet Arena
                     </div>
                 </Link>

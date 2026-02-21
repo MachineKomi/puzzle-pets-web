@@ -13,6 +13,7 @@ export interface SaveData {
     };
     wallet: {
         coins: number;
+        gems: number;
     };
     pets: {
         collection: string[]; // array of pet IDs grabbed from manifest
@@ -34,7 +35,7 @@ export const INITIAL_SAVE_DATA: SaveData = {
         createdAt: Date.now(),
         settings: {}, // Settings remain in Zustand persist for UI, but backed up here if needed
     },
-    wallet: { coins: 0 },
+    wallet: { coins: 0, gems: 0 },
     pets: {
         collection: [],
         activePetId: null,

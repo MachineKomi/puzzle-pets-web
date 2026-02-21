@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { usePuzzleSession } from '@/hooks/usePuzzleSession';
+import { useGameStore } from '@/store/game';
 import { generateSudoku } from '@/lib/puzzle/sudoku/generator';
 import { SudokuState, SudokuCell } from '@/lib/puzzle/sudoku/types';
 import { SudokuGrid } from './SudokuGrid';
 import { NumberPad } from './NumberPad';
+import { PuzzleCompanion } from './PuzzleCompanion';
+import { ParticleBurst } from './ParticleBurst';
 import { Button } from '@/components/ui/Button';
-import JSConfetti from 'js-confetti';
+import { Icon } from '@/components/ui/Icon';
 
 const getBlockIndices = (r: number, c: number, size: 4 | 6) => {
     const blockRows = 2;
@@ -38,6 +41,14 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
     const [recentlyPlaced, setRecentlyPlaced] = useState<{ r: number, c: number } | null>(null);
     const [completedCells, setCompletedCells] = useState<{ r: number, c: number }[]>([]);
 
+    const [isPetHappy, setIsPetHappy] = useState(false);
+    const [isPetSad, setIsPetSad] = useState(false);
+    const [activeBurst, setActiveBurst] = useState<{ x: number, y: number, color: string } | null>(null);
+    const [multiBursts, setMultiBursts] = useState<Array<{ id: number, x: number, y: number, color: string }>>([]);
+
+    // Global Store Integration for EXP
+    const gainXp = useGameStore(state => state.gainXp);
+
     // Undo stack keeping historical versions of the grid
     const [history, setHistory] = useState<SudokuCell[][][]>([]);
 
@@ -61,11 +72,20 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
         }
     }, [activeSession, difficulty, gridSize, startSession, selectedCell]);
 
-    const handleCellClick = useCallback((row: number, col: number) => {
+    const handleCellClick = useCallback((row: number, col: number, e?: React.MouseEvent) => {
         if (!state) return;
         const targetCell = state.grid[row][col];
         if (targetCell.isGiven || targetCell.value === targetCell.solution) return; // Prevent editing correct/given cells
         setSelectedCell({ r: row, c: col });
+
+        // Save coordinate if provided by the mouse event for particle origin
+        if (e && e.currentTarget) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            // Store it semi-globally just for this specific cell's interaction 
+            // We'll write it to a localized data attribute on the container so the NumberPad input can read it
+            document.documentElement.dataset.lastActiveX = String(rect.left + rect.width / 2);
+            document.documentElement.dataset.lastActiveY = String(rect.top + rect.height / 2);
+        }
     }, [state]);
 
     const pushHistory = useCallback((currentGrid: SudokuCell[][]) => {
@@ -159,15 +179,37 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 logEvent('mistake', { row: r, col: c, input: num, solution: targetCell.solution });
                 // eslint-disable-next-line react-hooks/immutability
                 state.mistakes += 1;
+
+                // Trigger Sad Pet
+                setIsPetSad(true);
+                setTimeout(() => setIsPetSad(false), 2000);
             } else {
                 cell.isError = false;
                 cell.notes = []; // Clear notes if placed
 
                 // Track newly placed cell for simple thumping
                 setRecentlyPlaced({ r, c });
-                setTimeout(() => setRecentlyPlaced(null), 300);
+                setTimeout(() => setRecentlyPlaced(null), 1000); // 1s matches CSS .animate-gem-flash
 
-                if (num !== null) logEvent('correct_input', { row: r, col: c, value: num });
+                if (num !== null) {
+                    logEvent('correct_input', { row: r, col: c, value: num });
+                    // Trigger Happy Pet
+                    setIsPetHappy(true);
+                    setTimeout(() => setIsPetHappy(false), 2000);
+
+                    // Fire localized sparkles 
+                    const x = parseFloat(document.documentElement.dataset.lastActiveX || "0");
+                    const y = parseFloat(document.documentElement.dataset.lastActiveY || "0");
+
+                    // Quick map for gem colours
+                    const colors: Record<number, string> = {
+                        1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6'
+                    };
+
+                    if (x && y) {
+                        setActiveBurst({ x, y, color: colors[num] || '#ffffff' });
+                    }
+                }
             }
             newGrid[r][c] = cell;
         }
@@ -220,12 +262,36 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                     return merged;
                 });
 
-                // Fire fireworks using js-confetti
-                const confetti = new JSConfetti();
-                confetti.addConfetti({
-                    emojis: ['💎', '✨', '🐾', '🌟'],
-                    confettiNumber: 40,
+                // Trigger Happy Pet & Grant EXP
+                setIsPetHappy(true);
+                setTimeout(() => setIsPetHappy(false), 2000);
+                gainXp(newCompleted.length * 10); // 10 XP per cleared tile
+
+                // Fire localized bursts correctly centered on each completed cell
+                const colors: Record<number, string> = {
+                    1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6'
+                };
+
+                const bursts = newCompleted.map((nc, idx) => {
+                    const basex = parseFloat(document.documentElement.dataset.lastActiveX || "0");
+                    const basey = parseFloat(document.documentElement.dataset.lastActiveY || "0");
+                    const jitterX = (Math.random() - 0.5) * 80;
+                    const jitterY = (Math.random() - 0.5) * 80;
+
+                    return {
+                        id: Date.now() + idx,
+                        x: basex + jitterX,
+                        y: basey + jitterY,
+                        color: colors[newGrid[nc.r][nc.c].value as number] || '#ffffff'
+                    }
                 });
+
+                setMultiBursts(prev => [...prev, ...bursts]);
+
+                // Clean up multi-bursts after animation length to prevent DOM bloating
+                setTimeout(() => {
+                    setMultiBursts([]);
+                }, 1200);
             }
         }
 
@@ -236,7 +302,25 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
     if (!activeSession || !state) return <div className="p-8 text-center animate-pulse">Loading Sudoku...</div>;
 
     return (
-        <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] animate-in fade-in zoom-in duration-500 pb-4">
+        <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] animate-in fade-in zoom-in duration-500 pb-4 relative">
+
+            {activeBurst && (
+                <ParticleBurst
+                    x={activeBurst.x}
+                    y={activeBurst.y}
+                    color={activeBurst.color}
+                    onComplete={() => setActiveBurst(null)}
+                />
+            )}
+
+            {multiBursts.map(burst => (
+                <ParticleBurst
+                    key={burst.id}
+                    x={burst.x}
+                    y={burst.y}
+                    color={burst.color}
+                />
+            ))}
 
             {/* Header Info */}
             <div className="flex justify-between items-center bg-panel p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5 shrink-0 mb-4">
@@ -249,7 +333,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={handleHint}>💡 Hint</Button>
+                    <Button variant="ghost" size="sm" onClick={handleHint}><Icon assetKey="ui/hint_icon" size="sm" className="inline-block mr-1" /> Hint</Button>
                     <Button variant="ghost" size="sm" onClick={handleUndo} disabled={history.length === 0}>↩️ Undo</Button>
                     <Button variant="danger" size="sm" onClick={() => abandonSession()}>Forfeit</Button>
                 </div>
@@ -269,7 +353,8 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
 
                 {/* Input Controls Area */}
-                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center">
+                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-4">
+                    <PuzzleCompanion isHappy={isPetHappy} isSad={isPetSad} />
                     <NumberPad
                         size={gridSize}
                         onNumberSelect={(num) => handleInput(num)}

@@ -8,7 +8,7 @@ export default function PuzzlesPage() {
             id: 'sudoku',
             title: 'Sudoku',
             description: 'Classic logic-based number placement puzzle. 4x4 and 6x6 grids available.',
-            icon: 'gems/gem_10',
+            icon: 'ui/sudoku_icon',
             href: '/puzzles/sudoku',
             color: 'bg-primary/20 border-primary/30',
         },

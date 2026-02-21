@@ -9,6 +9,7 @@ interface GameState extends SaveData {
     // Actions
     initLoad: () => Promise<void>;
     addCoins: (amount: number) => void;
+    addGems: (amount: number) => void;
     gainXp: (amount: number) => void;
     unlockPet: (petId: string) => void;
     setActivePet: (petId: string) => void;
@@ -53,6 +54,14 @@ export const useGameStore = create<GameState>((set) => ({
     addCoins: (amount: number) => {
         set((state) => {
             const newState = { wallet: { ...state.wallet, coins: state.wallet.coins + amount } };
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+    },
+
+    addGems: (amount: number) => {
+        set((state) => {
+            const newState = { wallet: { ...state.wallet, gems: state.wallet.gems + amount } };
             debouncedSave({ ...state, ...newState });
             return newState;
         });

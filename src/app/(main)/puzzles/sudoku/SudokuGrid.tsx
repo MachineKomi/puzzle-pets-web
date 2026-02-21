@@ -35,7 +35,7 @@ interface SudokuGridProps {
     grid: SudokuCell[][];
     size: 4 | 6;
     selectedCell: { r: number; c: number } | null;
-    onCellClick: (row: number, col: number) => void;
+    onCellClick: (row: number, col: number, e?: React.MouseEvent) => void;
     recentlyPlaced: { r: number, c: number } | null;
     completedCells: { r: number, c: number }[];
 }
@@ -83,11 +83,11 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell
                                 ${rIdx === size - 1 && cIdx === 0 ? 'rounded-bl-lg' : ''}
                                 ${rIdx === size - 1 && cIdx === size - 1 ? 'rounded-br-lg' : ''}
                             `}
-                            onClick={() => onCellClick(rIdx, cIdx)}
+                            onClick={(e) => onCellClick(rIdx, cIdx, e)}
                         >
                             {cell.value ? (
                                 <div className={`w-[90%] h-[90%] drop-shadow-md flex items-center justify-center ${cell.isError ? 'opacity-50 grayscale' : ''} ${cell.isGiven ? 'opacity-70' : ''}`}>
-                                    <Icon assetKey={currentAssetKey} className={animationClass} />
+                                    <Icon assetKey={currentAssetKey} className={`${animationClass} transform scale-125 md:scale-150`} />
                                 </div>
                             ) : cell.notes.length > 0 ? (
                                 <div className="absolute inset-1 grid grid-cols-2 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-[1px] p-[2px] opacity-70">

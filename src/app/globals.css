@@ -96,3 +96,39 @@ body {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) brightness(1.2);
   }
 }
+
+@keyframes gemFlash {
+  0% {
+    filter: brightness(2) drop-shadow(0 0 15px rgba(255, 255, 255, 1));
+    transform: scale(1.1);
+  }
+
+  100% {
+    filter: brightness(1) drop-shadow(0 0 2px rgba(255, 255, 255, 0));
+    transform: scale(1);
+  }
+}
+
+@keyframes flyOut {
+  0% {
+    transform: translate(0, 0) scale(var(--scale)) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .animate-gem-flash {
+    animation: gemFlash 1s ease-out forwards;
+  }
+
+  .particle-fly {
+    animation-name: flyOut;
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+    animation-fill-mode: forwards;
+  }
+}

@@ -55,6 +55,9 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
         const reward = calculateReward(activeSession.puzzleId, result);
         store.addCoins(reward.coins);
         store.gainXp(reward.xp);
+        if (reward.gems > 0) {
+            store.addGems(reward.gems);
+        }
 
         // 2. Record completion stats if won
         if (result.won && result.stars > 0) {

@@ -8,10 +8,10 @@ export const Navigation = () => {
     const pathname = usePathname();
 
     const links = [
-        { name: 'Home', path: '/', icon: '🏠' },
-        { name: 'Puzzles', path: '/puzzles', icon: '🧩' },
-        { name: 'Pets', path: '/pets', icon: '🐾' },
-        { name: 'Settings', path: '/settings', icon: '⚙️' },
+        { name: 'Home', path: '/', icon: 'ui/home_icon' },
+        { name: 'Puzzles', path: '/puzzles', icon: 'ui/puzzles_icon' },
+        { name: 'Pets', path: '/pets', icon: 'ui/pets_icon' },
+        { name: 'Settings', path: '/settings', icon: 'ui/settings_icon' },
     ];
 
     return (
@@ -27,7 +27,7 @@ export const Navigation = () => {
                             className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all ${isActive ? 'text-primary font-bold scale-110' : 'text-foreground/70 hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <span className="text-xl mb-1">{link.icon}</span>
+                            <Icon assetKey={link.icon} size="md" className="w-6 h-6 mb-1" />
                             <span className="text-[10px] sm:hidden">{link.name}</span>
                         </Link>
                     );
@@ -51,7 +51,7 @@ export const Navigation = () => {
                                     : 'text-foreground hover:bg-black/5 dark:hover:bg-white/5'
                                     }`}
                             >
-                                <span className="text-2xl">{link.icon}</span>
+                                <Icon assetKey={link.icon} size="lg" className="w-7 h-7" />
                                 <span className="text-lg">{link.name}</span>
                             </Link>
                         );

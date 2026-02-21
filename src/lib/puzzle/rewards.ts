@@ -3,6 +3,7 @@ import { PuzzleId, PuzzleResult } from './types';
 export interface CalculatedReward {
     coins: number;
     xp: number;
+    gems: number;
 }
 
 /**
@@ -12,7 +13,7 @@ export interface CalculatedReward {
 export function calculateReward(puzzleId: PuzzleId, result: PuzzleResult): CalculatedReward {
     if (!result.won || result.stars === 0) {
         // Basic consolation prize for trying
-        return { coins: 5, xp: 10 };
+        return { coins: 5, xp: 10, gems: 0 };
     }
 
     // Base rewards depend on the puzzle difficulty / type
@@ -45,5 +46,12 @@ export function calculateReward(puzzleId: PuzzleId, result: PuzzleResult): Calcu
     const coins = Math.floor(baseCoins * starMultiplier * mistakePenalty);
     const xp = Math.floor(baseXp * starMultiplier * mistakePenalty);
 
-    return { coins, xp };
+    // 30% chance to drop 1 Gacha Gem, 10% chance for 2, 5% chance for 3.
+    let gems = 0;
+    const roll = Math.random();
+    if (roll > 0.95) gems = 3;
+    else if (roll > 0.85) gems = 2;
+    else if (roll > 0.55) gems = 1;
+
+    return { coins, xp, gems };
 }

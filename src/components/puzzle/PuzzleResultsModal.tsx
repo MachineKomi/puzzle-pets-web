@@ -44,6 +44,12 @@ export const PuzzleResultsModal: React.FC<PuzzleResultsModalProps> = ({ isOpen, 
                             <Icon assetKey="ui/star" size="sm" />
                             <span className="font-bold text-accent">+{reward.xp} XP</span>
                         </div>
+                        {reward.gems > 0 && (
+                            <div className="flex items-center gap-2">
+                                <Icon assetKey="gems/gem_2" size="sm" />
+                                <span className="font-bold text-secondary">+{reward.gems} Gem</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 

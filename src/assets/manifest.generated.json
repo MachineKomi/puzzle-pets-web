@@ -42,5 +42,12 @@
   "sfx/dagger_throw": "/assets/sfx/dagger_throw.wav",
   "sfx/earthquake_hit": "/assets/sfx/earthquake_hit.wav",
   "sfx/slime_hit": "/assets/sfx/slime_hit.wav",
-  "ui/puzzle_pets_arena_logo": "/assets/ui/puzzle_pets_arena_logo.png"
+  "ui/draft_icon": "/assets/ui/draft_icon.png",
+  "ui/hint_icon": "/assets/ui/hint_icon.png",
+  "ui/home_icon": "/assets/ui/home_icon.png",
+  "ui/pets_icon": "/assets/ui/pets_icon.png",
+  "ui/puzzles_icon": "/assets/ui/puzzles_icon.png",
+  "ui/puzzle_pets_arena_logo": "/assets/ui/puzzle_pets_arena_logo.png",
+  "ui/settings_icon": "/assets/ui/settings_icon.png",
+  "ui/sudoku_icon": "/assets/ui/sudoku_icon.png"
 }
