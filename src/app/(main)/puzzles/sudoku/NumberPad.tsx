@@ -29,7 +29,7 @@ export const NumberPad: React.FC<NumberPadProps> = ({ size, onNumberSelect, onEr
                         onClick={() => onNumberSelect(num)}
                     >
                         <div className="w-full h-full drop-shadow-sm pointer-events-none flex items-center justify-center p-1">
-                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} className="w-full h-full" />
+                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} size="none" className="w-full h-full" />
                         </div>
                     </Button>
                 ))}

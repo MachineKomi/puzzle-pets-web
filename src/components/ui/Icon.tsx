@@ -3,13 +3,14 @@ import { getAssetUrl, AssetKey } from '../../assets';
 
 interface IconProps {
     assetKey: AssetKey | string;
-    size?: 'sm' | 'md' | 'lg' | 'xl';
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'none';
     className?: string;
     alt?: string;
 }
 
 export const Icon = ({ assetKey, size = 'md', className = '', alt = '' }: IconProps) => {
     const sizes = {
+        none: '',
         sm: 'w-6 h-6',
         md: 'w-8 h-8',
         lg: 'w-12 h-12',
