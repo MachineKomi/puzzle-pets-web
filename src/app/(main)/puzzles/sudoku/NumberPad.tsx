@@ -18,20 +18,21 @@ export const NumberPad: React.FC<NumberPadProps> = ({ size, onNumberSelect, onEr
 
     return (
         <div className="flex flex-col gap-4 w-full max-w-[400px] mx-auto">
-            {/* Number Buttons Row */}
+            {/* Gem Selection Buttons — plain <button> to avoid Button component padding conflicts */}
             <div className="flex gap-2 justify-center flex-wrap">
                 {numbers.map(num => (
-                    <Button
+                    <button
                         key={num}
-                        variant="ghost"
                         aria-label={`Select Gem ${num}`}
-                        className="w-14 h-14 p-2 shadow-md hover:scale-105 transition-transform"
+                        className="w-14 h-14 sm:w-16 sm:h-16 p-1 rounded-xl bg-transparent hover:bg-black/5 dark:hover:bg-white/10 shadow-md hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-focus-ring"
                         onClick={() => onNumberSelect(num)}
                     >
-                        <div className="w-full h-full drop-shadow-sm pointer-events-none flex items-center justify-center p-1">
-                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} size="none" className="w-full h-full" />
-                        </div>
-                    </Button>
+                        <img
+                            src={`/assets/${isNotesMode ? GEM_DRAFT_MAP[num] : GEM_MAP[num]}.png`}
+                            alt={`Gem ${num}`}
+                            className="w-full h-full object-contain drop-shadow-sm"
+                        />
+                    </button>
                 ))}
             </div>
 

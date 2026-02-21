@@ -16,18 +16,18 @@ export const Navigation = () => {
 
     return (
         <>
-            {/* Mobile Bottom Nav — icon-only, larger icons */}
-            <nav className="fixed bottom-0 left-0 right-0 bg-panel border-t border-black/10 dark:border-white/10 p-2 sm:hidden z-50 flex justify-around items-center h-20">
+            {/* Mobile Bottom Nav — large icon-only buttons */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-panel border-t border-black/10 dark:border-white/10 px-2 py-1 sm:hidden z-50 flex justify-around items-center h-24">
                 {links.map((link) => {
                     const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
                     return (
                         <Link
                             key={link.path}
                             href={link.path}
-                            className={`flex items-center justify-center p-2 rounded-xl transition-all ${isActive ? 'text-primary font-bold scale-110' : 'text-foreground/70 hover:bg-black/5 dark:hover:bg-white/5'
+                            className={`flex items-center justify-center p-1 rounded-xl transition-all ${isActive ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5'
                                 }`}
                         >
-                            <Icon assetKey={link.icon} size="none" className="w-12 h-12" />
+                            <Icon assetKey={link.icon} size="none" className="w-16 h-16" />
                         </Link>
                     );
                 })}
@@ -38,19 +38,19 @@ export const Navigation = () => {
                 <div className="flex flex-col items-center justify-center mb-6 shadow-sm py-2 border-b border-black/5">
                     <Icon assetKey="ui/puzzle_pets_arena_logo" size="none" className="w-[100%] h-auto max-w-[250px]" />
                 </div>
-                <nav className="flex flex-col gap-2">
+                <nav className="flex flex-col gap-3">
                     {links.map((link) => {
                         const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
                         return (
                             <Link
                                 key={link.path}
                                 href={link.path}
-                                className={`flex items-center gap-4 p-3 rounded-xl transition-all ${isActive
-                                    ? 'bg-primary/10 text-primary font-bold shadow-sm'
-                                    : 'text-foreground hover:bg-black/5 dark:hover:bg-white/5'
+                                className={`flex items-center justify-center p-2 rounded-xl transition-all ${isActive
+                                    ? 'bg-primary/10 shadow-sm scale-105'
+                                    : 'opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5'
                                     }`}
                             >
-                                <Icon assetKey={link.icon} size="none" className="w-10 h-10" />
+                                <Icon assetKey={link.icon} size="none" className="w-full max-w-[140px] h-auto" />
                             </Link>
                         );
                     })}
