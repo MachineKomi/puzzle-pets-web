@@ -40,7 +40,15 @@ export const useGameStore = create<GameState>((set) => ({
     initLoad: async () => {
         const savedData = await saveStorage.getSave();
         if (savedData) {
-            set({ ...savedData, isLoaded: true });
+            // Deep-merge with defaults so new fields added in code updates get their initial values.
+            // Without this, old saved data missing new fields (e.g. sudokuTrackLevel) causes crashes.
+            const merged: SaveData = {
+                profile: { ...INITIAL_SAVE_DATA.profile, ...savedData.profile },
+                wallet: { ...INITIAL_SAVE_DATA.wallet, ...savedData.wallet },
+                pets: { ...INITIAL_SAVE_DATA.pets, ...savedData.pets },
+                puzzles: { ...INITIAL_SAVE_DATA.puzzles, ...savedData.puzzles },
+            };
+            set({ ...merged, isLoaded: true });
         } else {
             // First time playing: Initialize empty save data with a generated profile ID
             const newSave = {
