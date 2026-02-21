@@ -16,7 +16,7 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
     /**
      * Starts a new session or resumes if one already exists for this puzzleId.
      */
-    const startSession = useCallback(() => {
+    const startSession = useCallback((initialState?: Record<string, unknown>) => {
         if (activeSession && activeSession.puzzleId === puzzleId) {
             // Resume existing session
             sessionLogger.log({ eventType: 'resume', sessionId: activeSession.id });
@@ -29,13 +29,19 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
             puzzleId,
             seed: Math.random().toString(36).substring(2, 10),
             startedAt: Date.now(),
-            state: null,
+            state: initialState || null,
         };
 
         store.setActiveSession(newSession);
         sessionLogger.log({ eventType: 'start', sessionId: newSession.id, details: { seed: newSession.seed } });
         return newSession;
     }, [activeSession, puzzleId, store]);
+
+    const logEvent = useCallback((eventType: any, details?: Record<string, unknown>) => {
+        if (activeSession) {
+            sessionLogger.log({ eventType, sessionId: activeSession.id, details });
+        }
+    }, [activeSession]);
 
     /**
      * Completes the current session, calculates rewards, records completion, and clears active state.
@@ -77,6 +83,7 @@ export function usePuzzleSession(puzzleId: PuzzleId) {
         startSession,
         completeSession,
         abandonSession,
+        logEvent,
         showResults,
         setShowResults,
         lastResult,
