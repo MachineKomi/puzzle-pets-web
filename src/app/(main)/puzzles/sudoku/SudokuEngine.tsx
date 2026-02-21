@@ -267,31 +267,38 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 setTimeout(() => setIsPetHappy(false), 2000);
                 gainXp(newCompleted.length * 10); // 10 XP per cleared tile
 
-                // Fire localized bursts correctly centered on each completed cell
+                // Quick map for gem colours
                 const colors: Record<number, string> = {
                     1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6'
                 };
 
-                const bursts = newCompleted.map((nc, idx) => {
-                    const basex = parseFloat(document.documentElement.dataset.lastActiveX || "0");
-                    const basey = parseFloat(document.documentElement.dataset.lastActiveY || "0");
-                    const jitterX = (Math.random() - 0.5) * 80;
-                    const jitterY = (Math.random() - 0.5) * 80;
-
-                    return {
-                        id: Date.now() + idx,
-                        x: basex + jitterX,
-                        y: basey + jitterY,
-                        color: colors[newGrid[nc.r][nc.c].value as number] || '#ffffff'
-                    }
-                });
-
-                setMultiBursts(prev => [...prev, ...bursts]);
-
-                // Clean up multi-bursts after animation length to prevent DOM bloating
+                // Fire localized bursts with a slight delay so they don't stack on the single-gem burst
                 setTimeout(() => {
-                    setMultiBursts([]);
-                }, 1200);
+                    const bursts = newCompleted.map((nc, idx) => {
+                        // Query the actual cell's DOM position by its aria-label
+                        const cellEl = document.querySelector(`[aria-label="Cell ${nc.r}-${nc.c}"]`);
+                        let cx = 0, cy = 0;
+                        if (cellEl) {
+                            const rect = cellEl.getBoundingClientRect();
+                            cx = rect.left + rect.width / 2;
+                            cy = rect.top + rect.height / 2;
+                        }
+
+                        return {
+                            id: Date.now() + idx,
+                            x: cx,
+                            y: cy,
+                            color: colors[newGrid[nc.r][nc.c].value as number] || '#ffffff'
+                        };
+                    });
+
+                    setMultiBursts(prev => [...prev, ...bursts]);
+
+                    // Clean up multi-bursts after animation
+                    setTimeout(() => {
+                        setMultiBursts([]);
+                    }, 1200);
+                }, 400);
             }
         }
 

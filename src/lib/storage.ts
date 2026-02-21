@@ -38,7 +38,7 @@ export const INITIAL_SAVE_DATA: SaveData = {
     wallet: { coins: 0, gems: 0 },
     pets: {
         collection: [],
-        activePetId: null,
+        activePetId: 'cat',
         xp: 0,
         level: 1,
         mood: 100,

@@ -74,7 +74,7 @@ export const PuzzleCompanion: React.FC<PuzzleCompanionProps> = ({ isHappy, isSad
     // Determine Pet Asset key based on ID conventions. 
     // Usually IDs map directly to icon keys like `ui/pets/${id}`. 
     // Fallback to the starter pet if not matched.
-    const assetKey = activePetId ? `pets/${activePetId}` : `pets/pet_1`;
+    const assetKey = activePetId ? `pets/${activePetId}` : `pets/cat`;
 
     let animationClass = "animate-in fade-in slide-in-from-bottom-4 duration-500 float-animation";
     if (isHappy) animationClass = "animate-bounce";

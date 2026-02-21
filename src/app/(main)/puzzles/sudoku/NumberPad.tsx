@@ -28,8 +28,8 @@ export const NumberPad: React.FC<NumberPadProps> = ({ size, onNumberSelect, onEr
                         className="w-14 h-14 p-2 shadow-md hover:scale-105 transition-transform"
                         onClick={() => onNumberSelect(num)}
                     >
-                        <div className="w-full h-full drop-shadow-sm pointer-events-none flex items-center justify-center transform scale-150">
-                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} />
+                        <div className="w-full h-full drop-shadow-sm pointer-events-none flex items-center justify-center p-1">
+                            <Icon assetKey={isNotesMode ? GEM_DRAFT_MAP[num] as string : GEM_MAP[num] as string} className="w-full h-full" />
                         </div>
                     </Button>
                 ))}
