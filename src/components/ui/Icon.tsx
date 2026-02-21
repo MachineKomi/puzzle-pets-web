@@ -19,12 +19,14 @@ export const Icon = ({ assetKey, size = 'md', className = '', alt = '' }: IconPr
 
     const src = getAssetUrl(assetKey);
 
+    const displayClass = size === 'none' ? 'block' : 'inline-block';
+
     return (
         // eslint-disable-next-line @next/next/no-img-element
         <img
             src={src}
             alt={alt || String(assetKey)}
-            className={`inline-block object-contain ${sizes[size]} ${className}`}
+            className={`${displayClass} object-contain ${sizes[size]} ${className}`}
             loading="lazy"
         />
     );

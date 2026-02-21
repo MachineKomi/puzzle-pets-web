@@ -309,7 +309,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
     if (!activeSession || !state) return null;
 
     return (
-        <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] animate-in fade-in zoom-in duration-500 pb-4 relative">
+        <div className="flex flex-col min-h-0 animate-in fade-in zoom-in duration-500 pb-24 sm:pb-4 relative">
 
             {activeBurst && (
                 <ParticleBurst
@@ -330,7 +330,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
             ))}
 
             {/* Header Info */}
-            <div className="flex justify-between items-center bg-panel p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5 shrink-0 mb-4">
+            <div className="flex justify-between items-center bg-panel p-3 sm:p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5 shrink-0 mb-2 sm:mb-4">
                 <div>
                     <div className="text-sm text-foreground/70 uppercase tracking-wider font-bold">
                         {gridSize}x{gridSize} • {difficulty}
@@ -346,9 +346,9 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 flex-1 items-center justify-center min-h-0">
-                {/* Main Grid Area */}
-                <div className="flex-1 w-full h-full flex items-center justify-center min-h-0">
+            <div className="flex flex-col lg:flex-row gap-2 sm:gap-6 flex-1 items-center justify-center min-h-0">
+                {/* Main Grid Area — constrained on mobile so it doesn't push controls off screen */}
+                <div className="w-full max-w-[min(100%,60vh)] lg:max-w-none lg:flex-1 lg:h-full flex items-center justify-center min-h-0">
                     <SudokuGrid
                         grid={state.grid}
                         size={gridSize}
@@ -360,8 +360,11 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
 
                 {/* Input Controls Area */}
-                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-4">
-                    <PuzzleCompanion isHappy={isPetHappy} isSad={isPetSad} />
+                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-2 sm:gap-4">
+                    {/* Pet — hidden on mobile to save space, visible on desktop */}
+                    <div className="hidden lg:block">
+                        <PuzzleCompanion isHappy={isPetHappy} isSad={isPetSad} />
+                    </div>
                     <NumberPad
                         size={gridSize}
                         onNumberSelect={(num) => handleInput(num)}
