@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/game';
 import { Icon } from '@/components/ui/Icon';
 
@@ -37,6 +37,8 @@ export const PuzzleCompanion: React.FC<PuzzleCompanionProps> = ({ isHappy, isSad
     const activePetId = useGameStore(state => state.pets.activePetId);
     const [bubbleText, setBubbleText] = useState("");
     const [showBubble, setShowBubble] = useState(false);
+    // Counter to force remount of the pet div, replaying one-shot CSS animations
+    const animKeyRef = useRef(0);
 
     // Random idle banter
     useEffect(() => {
@@ -57,12 +59,14 @@ export const PuzzleCompanion: React.FC<PuzzleCompanionProps> = ({ isHappy, isSad
     // Reactive banter
     useEffect(() => {
         if (isHappy) {
+            animKeyRef.current += 1;
             const phrase = HAPPY_PHRASES[Math.floor(Math.random() * HAPPY_PHRASES.length)];
             setBubbleText(phrase);
             setShowBubble(true);
             const timer = setTimeout(() => setShowBubble(false), 2000);
             return () => clearTimeout(timer);
         } else if (isSad) {
+            animKeyRef.current += 1;
             const phrase = SAD_PHRASES[Math.floor(Math.random() * SAD_PHRASES.length)];
             setBubbleText(phrase);
             setShowBubble(true);
@@ -71,14 +75,11 @@ export const PuzzleCompanion: React.FC<PuzzleCompanionProps> = ({ isHappy, isSad
         }
     }, [isHappy, isSad]);
 
-    // Determine Pet Asset key based on ID conventions. 
-    // Usually IDs map directly to icon keys like `ui/pets/${id}`. 
-    // Fallback to the starter pet if not matched.
     const assetKey = activePetId ? `pets/${activePetId}` : `pets/cat`;
 
-    let animationClass = "animate-in fade-in slide-in-from-bottom-4 duration-500 float-animation";
-    if (isHappy) animationClass = "animate-bounce";
-    if (isSad) animationClass = "animate-shake";
+    let animationClass = "animate-pet-float";
+    if (isHappy) animationClass = "animate-pet-bounce";
+    if (isSad) animationClass = "animate-pet-shake";
 
     return (
         <div className="relative flex flex-col items-center justify-center p-4">
@@ -94,9 +95,9 @@ export const PuzzleCompanion: React.FC<PuzzleCompanionProps> = ({ isHappy, isSad
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-panel border-b-2 border-r-2 border-primary/20 rotate-45 transform"></div>
             </div>
 
-            {/* Pet Graphic */}
-            <div className={`w-32 h-32 drop-shadow-md z-0 transition-all ${animationClass}`}>
-                <Icon assetKey={assetKey} className="w-full h-full object-contain" />
+            {/* Pet Graphic — key forces remount to replay one-shot animations */}
+            <div key={animKeyRef.current} className={`w-32 h-32 drop-shadow-md z-0 transition-all ${animationClass}`}>
+                <Icon assetKey={assetKey} size="none" className="w-full h-full object-contain" />
             </div>
 
         </div>

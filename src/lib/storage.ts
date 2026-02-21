@@ -24,8 +24,10 @@ export interface SaveData {
     };
     puzzles: {
         completedCount: number;
-        bestStats: Record<string, { stars: number; time: number }>; // e.g. 'sudoku_4x4' -> { stars: 3, time: 120 }
+        bestStats: Record<string, { stars: number; time: number }>;
         activeSession: import('./puzzle/types').PuzzleSession | null;
+        sudokuTrackLevel: number;
+        sudokuTrackStars: Record<number, number>; // level -> stars (1-3)
     };
 }
 
@@ -47,6 +49,8 @@ export const INITIAL_SAVE_DATA: SaveData = {
         completedCount: 0,
         bestStats: {},
         activeSession: null,
+        sudokuTrackLevel: 1,
+        sudokuTrackStars: {},
     },
 };
 

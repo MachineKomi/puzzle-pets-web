@@ -306,7 +306,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
     }, [state, selectedCell, activeSession, isNotesMode, pushHistory, logEvent, gridSize, checkWin]);
 
-    if (!activeSession || !state) return <div className="p-8 text-center animate-pulse">Loading Sudoku...</div>;
+    if (!activeSession || !state) return null;
 
     return (
         <div className="flex flex-col h-[calc(100vh-8rem)] min-h-[500px] animate-in fade-in zoom-in duration-500 pb-4 relative">

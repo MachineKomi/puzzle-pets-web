@@ -7,9 +7,9 @@ test.describe('Sudoku MVP Integration', () => {
     });
 
     test('can start a 4x4 puzzle, select a cell, and input a note', async ({ page }) => {
-        // Find and click the Easy 4x4 Start button
-        const startButton = page.getByRole('button', { name: 'Easy', exact: true }).first();
-        await startButton.click();
+        // Click Track Level 1 (first available level on the puzzle track)
+        const levelButton = page.getByRole('button', { name: '1' }).first();
+        await levelButton.click();
 
         // Ensure Sudoku grid rendered
         await expect(page.getByText('4x4 • easy')).toBeVisible();

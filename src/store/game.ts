@@ -14,6 +14,7 @@ interface GameState extends SaveData {
     unlockPet: (petId: string) => void;
     setActivePet: (petId: string) => void;
     recordPuzzleCompletion: (puzzleType: string, stars: number, time: number) => void;
+    advanceSudokuTrack: (level: number, stars: number) => void;
     setActiveSession: (session: import('@/lib/puzzle/types').PuzzleSession | null) => void;
     resetSaveData: () => Promise<void>;
 }
@@ -123,6 +124,26 @@ export const useGameStore = create<GameState>((set) => ({
                 }
             };
 
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+    },
+
+    advanceSudokuTrack: (level: number, stars: number) => {
+        set((state) => {
+            const newStars = { ...state.puzzles.sudokuTrackStars };
+            // Only update if new stars are higher
+            if (!newStars[level] || stars > newStars[level]) {
+                newStars[level] = stars;
+            }
+            const nextLevel = Math.max(state.puzzles.sudokuTrackLevel, level + 1);
+            const newState = {
+                puzzles: {
+                    ...state.puzzles,
+                    sudokuTrackLevel: nextLevel,
+                    sudokuTrackStars: newStars,
+                }
+            };
             debouncedSave({ ...state, ...newState });
             return newState;
         });
