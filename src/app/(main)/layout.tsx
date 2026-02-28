@@ -26,8 +26,8 @@ export default function MainLayout({
         <div className={`flex flex-col sm:flex-row min-h-screen bg-background text-foreground ${reducedMotion ? 'motion-reduce' : ''}`}>
             <Navigation />
 
-            {/* Main Content Area */}
-            <main className="flex-1 pb-16 sm:pb-0 overflow-y-auto w-full max-w-7xl mx-auto p-4 sm:p-8 animate-in fade-in duration-300">
+            {/* Main Content Area — pb-nav adds safe-area-aware padding on mobile so content never hides under the nav bar */}
+            <main className="flex-1 overflow-y-auto w-full max-w-4xl mx-auto p-4 sm:p-8 pb-nav sm:pb-8 animate-in fade-in duration-300">
                 <ClientHydration>
                     {children}
                 </ClientHydration>

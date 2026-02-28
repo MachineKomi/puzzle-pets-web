@@ -7,60 +7,113 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-accent: var(--accent);
+  --color-secondary: var(--secondary);
   --color-danger: var(--danger);
   --color-focus-ring: var(--focus-ring);
 }
 
-/* Base configuration (Normal Theme) */
+/* =====================================================
+   COZY GEMS THEME — warm cream + vibrant teal/coral
+   Inspired by Pokemon, Kirby, Tamagotchi
+   ===================================================== */
 :root {
-  --background: #f4f4f5;
-  /* Light gray background */
-  --foreground: #171717;
-  /* Dark text */
+  --background: #fff7ed;        /* warm orange-50 cream */
+  --foreground: #1c1917;        /* stone-900 warm dark */
   --panel: #ffffff;
-  /* White cards */
-  --primary: #3b82f6;
-  /* Blue 500 */
-  --primary-hover: #2563eb;
-  /* Blue 600 */
-  --accent: #f59e0b;
-  /* Amber 500 */
-  --danger: #ef4444;
-  /* Red 500 */
-  --focus-ring: #60a5fa;
-  /* Blue 400 */
+  --panel-border: rgba(13, 148, 136, 0.12);
+
+  --primary: #0d9488;           /* teal-600 — clean, vibrant */
+  --primary-hover: #0f766e;     /* teal-700 */
+  --primary-shadow: #115e59;    /* teal-800 — 3D button shadow */
+  --primary-light: #ccfbf1;     /* teal-100 */
+
+  --accent: #f97316;            /* orange-500 — warm pop */
+  --accent-hover: #ea580c;      /* orange-600 */
+  --accent-shadow: #c2410c;     /* orange-700 — 3D button shadow */
+  --accent-light: #ffedd5;      /* orange-100 */
+
+  --secondary: #a855f7;         /* purple-500 — Kirby! */
+  --secondary-hover: #9333ea;   /* purple-600 */
+  --secondary-shadow: #7e22ce;  /* purple-700 */
+
+  --danger: #ef4444;            /* red-500 */
+  --danger-shadow: #b91c1c;     /* red-700 */
+  --focus-ring: #5eead4;        /* teal-300 */
 }
 
-/* Zen Theme */
+/* Zen Theme — calmer palette, same structural tokens */
 [data-theme='zen'] {
   --background: #fdfbf7;
-  /* Warm off-white */
   --foreground: #4a4a4a;
-  /* Soft dark gray */
   --panel: #ffffff;
+  --panel-border: rgba(16, 185, 129, 0.12);
   --primary: #10b981;
-  /* Emerald 500 for a calm feel */
   --primary-hover: #059669;
-  /* Emerald 600 */
+  --primary-shadow: #065f46;
+  --primary-light: #d1fae5;
   --accent: #fbbf24;
-  /* Amber 400 */
+  --accent-hover: #f59e0b;
+  --accent-shadow: #b45309;
+  --accent-light: #fef9c3;
+  --secondary: #a855f7;
+  --secondary-hover: #9333ea;
+  --secondary-shadow: #7e22ce;
   --danger: #f87171;
-  /* Red 400 */
+  --danger-shadow: #dc2626;
   --focus-ring: #34d399;
-  /* Emerald 400 */
-
-  /* Additional Zen specific tokens could go here (e.g., textures) */
 }
-
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Nunito loaded via next/font — fallback to system rounded fonts */
+  font-family: var(--font-nunito), 'Nunito', ui-rounded, system-ui, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* Prevent pull-to-refresh rubber band on iOS game feel */
+  overscroll-behavior: none;
 }
 
 @layer utilities {
+  /* Mobile nav safe-area padding — accounts for iOS home indicator */
+  .pb-nav {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+  /* Nav bar itself uses this height */
+  .h-nav {
+    height: calc(4.5rem + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* Game-style label text with Pokemon-style black outline */
+  .game-label {
+    text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000;
+  }
+  /* 3D button bottom-shadow press effect */
+  .btn-3d-teal {
+    box-shadow: 0 5px 0 var(--primary-shadow);
+  }
+  .btn-3d-teal:active {
+    box-shadow: 0 2px 0 var(--primary-shadow);
+    transform: translateY(3px);
+  }
+  .btn-3d-orange {
+    box-shadow: 0 5px 0 var(--accent-shadow);
+  }
+  .btn-3d-orange:active {
+    box-shadow: 0 2px 0 var(--accent-shadow);
+    transform: translateY(3px);
+  }
+  .btn-3d-purple {
+    box-shadow: 0 5px 0 var(--secondary-shadow);
+  }
+  .btn-3d-purple:active {
+    box-shadow: 0 2px 0 var(--secondary-shadow);
+    transform: translateY(3px);
+  }
+
   .animate-gem-thump {
     animation: gemThump 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }

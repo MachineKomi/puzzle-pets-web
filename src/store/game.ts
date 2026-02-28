@@ -13,6 +13,9 @@ interface GameState extends SaveData {
     gainXp: (amount: number) => void;
     unlockPet: (petId: string) => void;
     setActivePet: (petId: string) => void;
+    feedPet: () => boolean;      // Returns false if insufficient coins
+    playWithPet: () => boolean;  // Returns false if insufficient coins
+    boostMood: (amount: number) => void;
     recordPuzzleCompletion: (puzzleType: string, stars: number, time: number) => void;
     advanceSudokuTrack: (level: number, stars: number) => void;
     setActiveSession: (session: import('@/lib/puzzle/types').PuzzleSession | null) => void;
@@ -105,6 +108,51 @@ export const useGameStore = create<GameState>((set) => ({
     setActivePet: (petId: string) => {
         set((state) => {
             const newState = { pets: { ...state.pets, activePetId: petId } };
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+    },
+
+    feedPet: () => {
+        const FEED_COST = 20;
+        const FEED_MOOD = 15;
+        let success = false;
+        set((state) => {
+            if (state.wallet.coins < FEED_COST) return state;
+            success = true;
+            const newMood = Math.min(100, state.pets.mood + FEED_MOOD);
+            const newState = {
+                wallet: { ...state.wallet, coins: state.wallet.coins - FEED_COST },
+                pets: { ...state.pets, mood: newMood },
+            };
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+        return success;
+    },
+
+    playWithPet: () => {
+        const PLAY_COST = 10;
+        const PLAY_MOOD = 8;
+        let success = false;
+        set((state) => {
+            if (state.wallet.coins < PLAY_COST) return state;
+            success = true;
+            const newMood = Math.min(100, state.pets.mood + PLAY_MOOD);
+            const newState = {
+                wallet: { ...state.wallet, coins: state.wallet.coins - PLAY_COST },
+                pets: { ...state.pets, mood: newMood },
+            };
+            debouncedSave({ ...state, ...newState });
+            return newState;
+        });
+        return success;
+    },
+
+    boostMood: (amount: number) => {
+        set((state) => {
+            const newMood = Math.min(100, state.pets.mood + amount);
+            const newState = { pets: { ...state.pets, mood: newMood } };
             debouncedSave({ ...state, ...newState });
             return newState;
         });
