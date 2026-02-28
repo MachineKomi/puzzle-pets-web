@@ -1,5 +1,5 @@
 /**
- * A standard 4x4 or 6x6 Sudoku Cell.
+ * A standard 4x4, 6x6, or 9x9 Sudoku Cell.
  */
 export interface SudokuCell {
     row: number;
@@ -15,7 +15,7 @@ export interface SudokuCell {
  * State object stored structurally inside `PuzzleSession` `state`.
  */
 export interface SudokuState {
-    gridSize: 4 | 6;          // Sudoku variations MVP
+    gridSize: 4 | 6 | 9;      // Sudoku variations
     grid: SudokuCell[][];     // 2D Array [row][col]
     mistakes: number;         // Tracked within the individual puzzle session
     timeElapsed: number;      // Current play time recorded locally

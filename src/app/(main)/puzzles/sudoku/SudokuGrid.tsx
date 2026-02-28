@@ -11,6 +11,9 @@ export const GEM_MAP: Record<number, string> = {
     4: 'gems/gem_4',
     5: 'gems/gem_5',
     6: 'gems/gem_6',
+    7: 'gems/gem_7',
+    8: 'gems/gem_8',
+    9: 'gems/gem_9',
 };
 
 export const GEM_GLOW_MAP: Record<number, string> = {
@@ -20,6 +23,9 @@ export const GEM_GLOW_MAP: Record<number, string> = {
     4: 'gems/gem_4_glowing',
     5: 'gems/gem_5_glowing',
     6: 'gems/gem_6_glowing',
+    7: 'gems/gem_7_glowing',
+    8: 'gems/gem_8_glowing',
+    9: 'gems/gem_9_glowing',
 };
 
 export const GEM_DRAFT_MAP: Record<number, string> = {
@@ -29,11 +35,14 @@ export const GEM_DRAFT_MAP: Record<number, string> = {
     4: 'gems/gem_4_draftnote',
     5: 'gems/gem_5_draftnote',
     6: 'gems/gem_6_draftnote',
+    7: 'gems/gem_7_draftnote',
+    8: 'gems/gem_8_draftnote',
+    9: 'gems/gem_9_draftnote',
 };
 
 interface SudokuGridProps {
     grid: SudokuCell[][];
-    size: 4 | 6;
+    size: 4 | 6 | 9;
     selectedCell: { r: number; c: number } | null;
     onCellClick: (row: number, col: number, e?: React.MouseEvent) => void;
     recentlyPlaced: { r: number, c: number } | null;
@@ -42,12 +51,12 @@ interface SudokuGridProps {
 
 export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell, onCellClick, recentlyPlaced, completedCells }) => {
     // Determine CSS Grid styles based on size
-    const gridClass = size === 4 ? 'grid-cols-4' : 'grid-cols-6';
-    const blockRows = 2;
+    const gridClass = size === 9 ? 'grid-cols-9' : size === 6 ? 'grid-cols-6' : 'grid-cols-4';
+    const blockRows = size === 9 ? 3 : 2;
     const blockCols = size === 4 ? 2 : 3;
 
     return (
-        <div className={`grid ${gridClass} gap-1 bg-black/20 dark:bg-white/20 p-2 sm:p-3 rounded-xl shadow-inner w-full h-full max-w-[min(100%,80vh)] max-h-[min(100%,80vw)] aspect-square mx-auto`}>
+        <div className={`grid ${gridClass} ${size === 9 ? 'gap-[2px]' : 'gap-1'} bg-black/20 dark:bg-white/20 p-1.5 sm:p-3 rounded-xl shadow-inner w-full h-full max-w-full max-h-full aspect-square mx-auto`}>
             {grid.map((row, rIdx) =>
                 row.map((cell, cIdx) => {
                     const isSelected = selectedCell?.r === rIdx && selectedCell?.c === cIdx;
@@ -90,7 +99,7 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell
                                     <Icon assetKey={currentAssetKey} size="none" className={`w-full h-full ${animationClass}`} />
                                 </div>
                             ) : cell.notes.length > 0 ? (
-                                <div className="absolute inset-1 grid grid-cols-2 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-[1px] p-[2px] opacity-70">
+                                <div className={`absolute inset-1 grid gap-[1px] p-[2px] opacity-70 ${size === 9 ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2'}`}>
                                     {Array.from({ length: size }, (_, i) => i + 1).map(num => (
                                         <div key={num} className="flex items-center justify-center">
                                             {cell.notes.includes(num) && (

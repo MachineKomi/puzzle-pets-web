@@ -40,7 +40,7 @@ export default function SettingsPage() {
         <div className="max-w-2xl mx-auto pb-12">
             <h1 className="text-4xl font-extrabold mb-8 text-center sm:text-left">Settings</h1>
 
-            <h2 className="text-2xl font-bold mb-4 text-primary">Preferences</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">🎮 Preferences</h2>
             <Card variant="panel" className="mb-8 p-2">
                 <ToggleSwitch
                     label="Zen Mode"
@@ -68,7 +68,7 @@ export default function SettingsPage() {
                 />
             </Card>
 
-            <h2 className="text-2xl font-bold mb-4 text-danger">Data Management</h2>
+            <h2 className="text-2xl font-bold mb-4 text-amber-600">⚙️ Data Management</h2>
             <Card variant="panel" className="p-6 border-danger/20">
                 <div className="flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left">
                     <div>

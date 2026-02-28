@@ -17,14 +17,14 @@ export default function SudokuPage() {
     const advanceSudokuTrack = useGameStore(state => state.advanceSudokuTrack);
 
     // Local pre-game configuration state
-    const [config, setConfig] = useState<{ level: number; size: 4 | 6; diff: 'easy' | 'medium' | 'hard' } | null>(null);
+    const [config, setConfig] = useState<{ level: number; size: 4 | 6 | 9; diff: 'easy' | 'medium' | 'hard' } | null>(null);
 
     // Results modal state — managed locally, fed by SudokuEngine's onComplete callback
     const [showResults, setShowResults] = useState(false);
     const [completedResult, setCompletedResult] = useState<{ result: PuzzleResult; reward: CalculatedReward } | null>(null);
 
     // Handle track level selection
-    const handleSelectLevel = useCallback((level: number, size: 4 | 6, diff: 'easy' | 'medium' | 'hard') => {
+    const handleSelectLevel = useCallback((level: number, size: 4 | 6 | 9, diff: 'easy' | 'medium' | 'hard') => {
         setConfig({ level, size, diff });
     }, []);
 

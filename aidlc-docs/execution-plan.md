@@ -47,3 +47,15 @@ This plan defines the execution units for the Web MVP vertical slice, replatform
 - **Evidence**:
   - Command: `pnpm run e2e` (Playwright/Cypress basic flow test) -> passes.
   - Final human playthrough in staging environment.
+
+---
+
+## Backlog (Post-MVP)
+
+### Tsumego (Go Puzzles)
+- **Priority**: Next puzzle type after Sudoku, before Match-3
+- **MVP approach**: Source open-source tsumego problem libraries (e.g., GoProblems.com datasets, OGS puzzle databases) and integrate a curated set
+- **Long-term**: Dedicated tsumego miner/generator engine (review user's existing legacy tsumego repo for reuse)
+- **Implementation order**: Sudoku → Tsumego → Memory Match → Match-3
+- **Requirements**: Simple board renderer (9×9 or 13×13 partial board), tap-to-play-stone interaction, life/death evaluation
+- **Note**: Before starting implementation, review user's existing tsumego miner/generator repo for reuse opportunities

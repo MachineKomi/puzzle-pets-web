@@ -1,19 +1,27 @@
 import { SudokuCell } from './types';
 
-function createEmptyGrid(size: 4 | 6): number[][] {
+type GridSize = 4 | 6 | 9;
+
+function createEmptyGrid(size: GridSize): number[][] {
     return Array.from({ length: size }, () => Array(size).fill(0));
 }
 
+/** Block dimensions for each grid size: [rows, cols] */
+function getBlockDims(size: GridSize): [number, number] {
+    if (size === 4) return [2, 2];
+    if (size === 6) return [2, 3];
+    return [3, 3]; // 9×9
+}
+
 // Simple Sudoku validation checking row, col, and subgrid constraints
-function isValid(grid: number[][], row: number, col: number, num: number, size: 4 | 6): boolean {
+function isValid(grid: number[][], row: number, col: number, num: number, size: GridSize): boolean {
     // Check row and col
     for (let i = 0; i < size; i++) {
         if (grid[row][i] === num || grid[i][col] === num) return false;
     }
 
-    // Check subgrid (Block size varies, 4x4 -> 2x2 blocks, 6x6 -> 2x3 blocks)
-    const blockRows = 2;
-    const blockCols = size === 4 ? 2 : 3;
+    // Check subgrid
+    const [blockRows, blockCols] = getBlockDims(size);
     const startRow = row - (row % blockRows);
     const startCol = col - (col % blockCols);
 
@@ -27,7 +35,7 @@ function isValid(grid: number[][], row: number, col: number, num: number, size: 
 }
 
 // Backtracking solver to generate a complete board
-function solveGrid(grid: number[][], size: 4 | 6): boolean {
+function solveGrid(grid: number[][], size: GridSize): boolean {
     for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
             if (grid[row][col] === 0) {
@@ -49,10 +57,10 @@ function solveGrid(grid: number[][], size: 4 | 6): boolean {
 
 /**
  * Generates a playable Sudoku grid.
- * @param size The grid dimension (4x4 or 6x6)
+ * @param size The grid dimension (4x4, 6x6, or 9x9)
  * @param difficulty Percentage of cells to clear (e.g., 0.5 clears 50% of the board)
  */
-export function generateSudoku(size: 4 | 6, difficulty: number = 0.5): SudokuCell[][] {
+export function generateSudoku(size: GridSize, difficulty: number = 0.5): SudokuCell[][] {
     // 1. Generate full solved grid
     const solutionGrid = createEmptyGrid(size);
     solveGrid(solutionGrid, size);

@@ -60,7 +60,7 @@ export default function HomePage() {
     const moodLabel = pets.mood >= 80 ? 'Happy' : pets.mood >= 50 ? 'Content' : pets.mood >= 20 ? 'Bored' : 'Sad';
 
     return (
-        <div className="flex flex-col gap-5 max-w-lg mx-auto">
+        <div className="flex flex-col gap-4 max-w-lg mx-auto">
 
             {/* ── Currency HUD ──────────────────────────────── */}
             {isLoaded && (
@@ -71,17 +71,18 @@ export default function HomePage() {
             )}
 
             {/* ── Pet Display Card ───────────────────────────── */}
-            <div className="relative bg-gradient-to-br from-teal-50 to-orange-50 rounded-3xl border-2 border-primary/15 shadow-lg p-6 text-center overflow-hidden">
-                {/* Background glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl pointer-events-none" />
+            <div className="relative bg-gradient-to-br from-teal-50 via-white to-orange-50 rounded-3xl border-2 border-primary/15 shadow-lg p-5 text-center overflow-hidden">
+                {/* Background glow + depth */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/8 rounded-3xl pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] h-32 bg-gradient-to-b from-white/40 to-transparent rounded-full pointer-events-none" />
 
                 {/* Pet sprite */}
-                <div className="relative flex justify-center mb-4">
+                <div className="relative flex justify-center mb-3">
                     <div className="absolute inset-0 bg-primary/15 blur-3xl rounded-full opacity-60 animate-pulse scale-75 mx-auto" />
                     <Icon
                         assetKey="pets/cat"
                         size="none"
-                        className="w-44 h-44 sm:w-52 sm:h-52 z-10 drop-shadow-xl animate-pet-float"
+                        className="w-36 h-36 sm:w-44 sm:h-44 z-10 drop-shadow-xl animate-pet-float"
                     />
                 </div>
 

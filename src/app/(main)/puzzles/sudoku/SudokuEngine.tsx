@@ -12,8 +12,8 @@ import { ParticleBurst } from './ParticleBurst';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 
-const getBlockIndices = (r: number, c: number, size: 4 | 6) => {
-    const blockRows = 2;
+const getBlockIndices = (r: number, c: number, size: 4 | 6 | 9) => {
+    const blockRows = size === 9 ? 3 : 2;
     const blockCols = size === 4 ? 2 : 3;
     const startRow = Math.floor(r / blockRows) * blockRows;
     const startCol = Math.floor(c / blockCols) * blockCols;
@@ -29,7 +29,7 @@ const getBlockIndices = (r: number, c: number, size: 4 | 6) => {
 
 interface SudokuEngineProps {
     difficulty: 'easy' | 'medium' | 'hard';
-    gridSize: 4 | 6;
+    gridSize: 4 | 6 | 9;
     onComplete?: (result: import('@/lib/puzzle/types').PuzzleResult, reward: import('@/lib/puzzle/rewards').CalculatedReward) => void;
 }
 
@@ -208,7 +208,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
                     // Quick map for gem colours
                     const colors: Record<number, string> = {
-                        1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6'
+                        1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6', 7: '#ec4899', 8: '#14b8a6', 9: '#f97316'
                     };
 
                     if (x && y) {
@@ -314,7 +314,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
     if (!activeSession || !state) return null;
 
     return (
-        <div className="flex flex-col min-h-0 animate-in fade-in zoom-in duration-500 pb-24 sm:pb-4 relative">
+        <div className="flex flex-col min-h-0 animate-in fade-in zoom-in duration-500 pb-4 relative max-h-[calc(100dvh-8rem)] sm:max-h-none overflow-hidden">
 
             {activeBurst && (
                 <ParticleBurst
@@ -351,9 +351,9 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-2 sm:gap-6 flex-1 items-center justify-center min-h-0">
+            <div className="flex flex-col lg:flex-row gap-2 sm:gap-6 flex-1 items-center justify-center min-h-0 overflow-hidden">
                 {/* Main Grid Area — constrained on mobile so it doesn't push controls off screen */}
-                <div className="w-full max-w-[min(100%,60vh)] lg:max-w-none lg:flex-1 lg:h-full flex items-center justify-center min-h-0">
+                <div className="w-full max-w-[min(100%,45dvh)] sm:max-w-[min(100%,55vh)] lg:max-w-none lg:flex-1 lg:h-full flex items-center justify-center min-h-0 shrink">
                     <SudokuGrid
                         grid={state.grid}
                         size={gridSize}
@@ -365,7 +365,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 </div>
 
                 {/* Input Controls Area */}
-                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-2 sm:gap-4">
+                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-2 sm:gap-4 shrink-0">
                     {/* Pet — hidden on mobile to save space, visible on desktop */}
                     <div className="hidden lg:block">
                         <PuzzleCompanion isHappy={isPetHappy} isSad={isPetSad} />

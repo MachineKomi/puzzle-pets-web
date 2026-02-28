@@ -71,6 +71,11 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   /* Prevent pull-to-refresh rubber band on iOS game feel */
   overscroll-behavior: none;
+  /* Subtle depth: soft radial gradient overlay */
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(13, 148, 136, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.04) 0%, transparent 60%);
+  background-attachment: fixed;
 }
 
 @layer utilities {
