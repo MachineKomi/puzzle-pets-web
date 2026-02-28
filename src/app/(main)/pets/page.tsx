@@ -4,21 +4,21 @@ import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 
 const PET_PLACEHOLDERS = [
-    { name: 'Cat', asset: 'pets/cat', requirement: 'Your starter pet!', unlocked: true },
-    { name: 'Dog', asset: 'pets/cat', requirement: 'Complete 10 puzzles', unlocked: false },
-    { name: 'Bunny', asset: 'pets/cat', requirement: 'Reach Level 5', unlocked: false },
-    { name: 'Fox', asset: 'pets/cat', requirement: 'Earn 500 coins', unlocked: false },
-    { name: 'Owl', asset: 'pets/cat', requirement: 'Complete Meadow Garden', unlocked: false },
-    { name: 'Penguin', asset: 'pets/cat', requirement: 'Complete Crystal Caves', unlocked: false },
-    { name: 'Dragon', asset: 'pets/cat', requirement: 'Complete Sunset Beach', unlocked: false },
-    { name: 'Phoenix', asset: 'pets/cat', requirement: 'Complete all 100 levels', unlocked: false },
+    { name: 'Cat',           asset: 'pets/cat',              requirement: 'Your starter pet!',        unlocked: true },
+    { name: 'Bunny',         asset: 'pets/bunny',            requirement: 'Complete 10 puzzles',      unlocked: false },
+    { name: 'Owl',           asset: 'pets/owl',              requirement: 'Reach Level 5',            unlocked: false },
+    { name: 'Panda',         asset: 'pets/panda',            requirement: 'Earn 500 coins',           unlocked: false },
+    { name: 'Copper Dragon', asset: 'pets/babycopperdragon', requirement: 'Complete Meadow Garden',   unlocked: false },
+    { name: 'Cosmic Owl',    asset: 'pets/cosmicowl',        requirement: 'Complete Crystal Caves',   unlocked: false },
+    { name: 'Nine-Tail Fox', asset: 'pets/ninetailfoxkami',  requirement: 'Complete Sunset Beach',    unlocked: false },
+    { name: 'Phoenix Cat',   asset: 'pets/phoenixcat',       requirement: 'Complete all 100 levels',  unlocked: false },
 ];
 
 export default function PetsPage() {
     return (
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-4 overflow-y-auto">
             <h1 className="text-4xl font-black mb-2 text-center sm:text-left text-primary tracking-tight">Pet Arena</h1>
-            <p className="text-foreground/60 mb-8 text-center sm:text-left">Collect and train adorable puzzle companions!</p>
+            <p className="text-foreground/60 mb-6 text-center sm:text-left">Collect and train adorable puzzle companions!</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {PET_PLACEHOLDERS.map((pet, i) => (
@@ -31,9 +31,9 @@ export default function PetsPage() {
                                 : 'cursor-default'
                         }`}
                     >
-                        {/* Pet image — locked pets get silhouette treatment */}
-                        <div className={`relative ${pet.unlocked ? '' : 'grayscale opacity-30'}`}>
-                            <Icon assetKey={pet.asset} size="xl" className={pet.unlocked ? 'drop-shadow-lg' : ''} />
+                        {/* Pet image — locked pets get black silhouette (Smash Bros style) */}
+                        <div className={`relative ${pet.unlocked ? '' : 'brightness-0 opacity-40'}`}>
+                            <Icon assetKey={pet.asset} size="none" className={`w-20 h-20 sm:w-24 sm:h-24 ${pet.unlocked ? 'drop-shadow-lg' : ''}`} />
                             {/* Mystery shimmer for locked pets */}
                             {!pet.unlocked && (
                                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent animate-pulse rounded-full" />

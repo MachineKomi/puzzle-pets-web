@@ -23,11 +23,11 @@ export default function MainLayout({
     }, [theme]);
 
     return (
-        <div className={`flex flex-col sm:flex-row min-h-screen bg-background text-foreground ${reducedMotion ? 'motion-reduce' : ''}`}>
+        <div className={`flex flex-col sm:flex-row h-dvh bg-background text-foreground overflow-hidden ${reducedMotion ? 'motion-reduce' : ''}`}>
             <Navigation />
 
-            {/* Main Content Area — pb-nav adds safe-area-aware padding on mobile so content never hides under the nav bar */}
-            <main className="flex-1 overflow-y-auto w-full max-w-4xl mx-auto p-4 sm:p-8 pb-nav sm:pb-8 animate-in fade-in duration-300">
+            {/* Main Content Area — viewport-locked, each page controls its own scrolling */}
+            <main className="flex-1 min-h-0 w-full px-4 sm:px-6 pb-nav sm:pb-0 animate-in fade-in duration-300">
                 <ClientHydration>
                     {children}
                 </ClientHydration>

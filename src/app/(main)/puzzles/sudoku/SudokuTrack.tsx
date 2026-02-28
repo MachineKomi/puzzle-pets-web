@@ -35,23 +35,21 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
         });
     }, [currentLevel]);
 
-    // Clamp scroll: prevent scrolling above maxVisibleLevel
+    // Clamp scroll: prevent scrolling UP past maxVisibleLevel.
+    // Since the track is reversed (level 100 at top, level 1 at bottom),
+    // high-numbered levels are at LOW scrollTop values. We enforce a
+    // minimum scrollTop so levels above maxVisibleLevel stay hidden.
     const handleScroll = useCallback(() => {
         const container = scrollRef.current;
         if (!container) return;
-        // Find the sentinel element for the max visible level
+        // Find the sentinel: the first level ABOVE the max visible range
         const sentinel = container.querySelector(`[data-level="${maxVisibleLevel + 1}"]`);
-        if (sentinel) {
-            const sentinelRect = sentinel.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-            // If the sentinel is visible (scrolled too far up), push back down
-            if (sentinelRect.bottom > containerRect.top) {
-                const sentinelEl = sentinel as HTMLElement;
-                const maxScroll = sentinelEl.offsetTop - container.clientHeight;
-                if (container.scrollTop < maxScroll) {
-                    container.scrollTop = maxScroll;
-                }
-            }
+        if (!sentinel) return;
+        const sentinelEl = sentinel as HTMLElement;
+        // Minimum scrollTop = just past this sentinel so it's hidden above the fold
+        const minScroll = sentinelEl.offsetTop + sentinelEl.offsetHeight;
+        if (container.scrollTop < minScroll) {
+            container.scrollTop = minScroll;
         }
     }, [maxVisibleLevel]);
 
@@ -79,16 +77,16 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
     }
 
     return (
-        <div className="max-w-lg mx-auto w-full">
-            <h1 className="text-4xl font-black text-primary mb-2 tracking-tight text-center">Sudoku</h1>
-            <p className="text-foreground/70 mb-4 text-lg text-center">
+        <div className="max-w-lg mx-auto w-full flex-1 min-h-0 flex flex-col">
+            <h1 className="text-4xl font-black text-primary mb-2 tracking-tight text-center shrink-0">Sudoku</h1>
+            <p className="text-foreground/70 mb-4 text-lg text-center shrink-0">
                 Complete puzzles to advance along the track!
             </p>
 
             {/* Track Path — scrollable, reversed (level 1 at bottom) */}
             <div
                 ref={scrollRef}
-                className="relative max-h-[60vh] overflow-y-auto px-4 py-6 rounded-2xl"
+                className="relative flex-1 min-h-0 overflow-y-auto px-4 py-6 rounded-2xl"
                 style={{ scrollbarWidth: 'thin' }}
             >
                 {/* MASTER trophy at the top — only shown if near top */}

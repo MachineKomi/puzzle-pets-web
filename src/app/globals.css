@@ -71,10 +71,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   /* Prevent pull-to-refresh rubber band on iOS game feel */
   overscroll-behavior: none;
-  /* Subtle depth: soft radial gradient overlay */
+  /* Subtle depth: dot-grid pattern + soft radial gradient overlay */
   background-image:
-    radial-gradient(ellipse at 30% 20%, rgba(13, 148, 136, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.04) 0%, transparent 60%);
+    radial-gradient(circle at 1px 1px, rgba(13, 148, 136, 0.03) 1px, transparent 0),
+    radial-gradient(ellipse at 30% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 60%);
+  background-size: 24px 24px, 100% 100%, 100% 100%;
   background-attachment: fixed;
 }
 
@@ -101,10 +103,11 @@ body {
   .sudoku-layout {
     display: flex;
     flex-direction: column;
-    /* Total available = viewport minus bottom nav and page chrome */
-    height: calc(100dvh - 5rem - env(safe-area-inset-bottom) - 2rem);
+    /* Total available = viewport minus bottom nav */
+    height: calc(100dvh - 5rem - env(safe-area-inset-bottom));
     overflow: hidden;
     gap: 6px;
+    padding: 4px 8px;
     animation: fadeIn 0.4s ease-out;
   }
 
@@ -137,7 +140,8 @@ body {
   @media (min-width: 1024px) {
     .sudoku-layout {
       /* Desktop has no bottom nav — sidebar is on the side */
-      height: calc(100dvh - 4rem);
+      height: calc(100dvh - 1rem);
+      padding: 8px 16px;
     }
     .sudoku-grid-container {
       flex: 1;
@@ -153,8 +157,25 @@ body {
        1px  1px 0 #000;
   }
   /* 3D button bottom-shadow press effect */
+  /* Viewport-fit page utility */
+  .page-viewport {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .page-scroll {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .btn-3d-teal {
     box-shadow: 0 5px 0 var(--primary-shadow);
+  }
+  .btn-3d-teal:hover {
+    box-shadow: 0 5px 0 var(--primary-shadow), 0 0 20px rgba(13, 148, 136, 0.3);
   }
   .btn-3d-teal:active {
     box-shadow: 0 2px 0 var(--primary-shadow);
@@ -163,12 +184,18 @@ body {
   .btn-3d-orange {
     box-shadow: 0 5px 0 var(--accent-shadow);
   }
+  .btn-3d-orange:hover {
+    box-shadow: 0 5px 0 var(--accent-shadow), 0 0 20px rgba(249, 115, 22, 0.3);
+  }
   .btn-3d-orange:active {
     box-shadow: 0 2px 0 var(--accent-shadow);
     transform: translateY(3px);
   }
   .btn-3d-purple {
     box-shadow: 0 5px 0 var(--secondary-shadow);
+  }
+  .btn-3d-purple:hover {
+    box-shadow: 0 5px 0 var(--secondary-shadow), 0 0 20px rgba(168, 85, 247, 0.3);
   }
   .btn-3d-purple:active {
     box-shadow: 0 2px 0 var(--secondary-shadow);

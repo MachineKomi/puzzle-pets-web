@@ -37,7 +37,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto pb-12">
+        <div className="max-w-2xl mx-auto h-full overflow-y-auto pb-12">
             <h1 className="text-4xl font-extrabold mb-8 text-center sm:text-left">Settings</h1>
 
             <h2 className="text-2xl font-bold mb-4 text-primary">🎮 Preferences</h2>

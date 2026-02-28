@@ -47,7 +47,7 @@ export default function SudokuPage() {
     // If a session is active (or config is chosen), render engine
     if (activeSession?.puzzleId === 'sudoku' || config) {
         return (
-            <div className="max-w-3xl mx-auto w-full pt-4">
+            <div className="w-full h-full">
                 <SudokuEngine
                     gridSize={config?.size || 4}
                     difficulty={config?.diff || 'easy'}
@@ -79,11 +79,11 @@ export default function SudokuPage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto flex flex-col items-center min-h-[70vh] w-full pt-4 sm:pt-12 pb-20">
-            <Card variant="elevated" className="p-8 w-full animate-in slide-in-from-bottom-4 duration-500">
+        <div className="max-w-xl mx-auto flex flex-col items-center w-full h-full py-2 overflow-hidden">
+            <Card variant="elevated" className="p-4 sm:p-6 w-full flex-1 min-h-0 flex flex-col animate-in slide-in-from-bottom-4 duration-500">
                 <SudokuTrack onSelectLevel={handleSelectLevel} />
 
-                <div className="mt-8 pt-8 border-t border-black/5 dark:border-white/5 max-w-sm mx-auto">
+                <div className="mt-4 pt-4 border-t border-black/5 dark:border-white/5 max-w-sm mx-auto shrink-0">
                     <Link href="/puzzles" className="contents">
                         <Button variant="ghost" className="w-full">Back to Puzzles</Button>
                     </Link>
