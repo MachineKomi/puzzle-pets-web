@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useCallback, useEffect } from 'react';
 import { useGameStore } from '@/store/game';
 import { TRACK_LEVELS, BIOMES, getBiomeForLevel } from '@/lib/puzzle/sudoku/biomes';
 
@@ -14,30 +14,58 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const currentLevelRef = useRef<HTMLButtonElement>(null);
 
-    // Start scrolled to the bottom (level 1), then smooth-scroll to current level
-    useLayoutEffect(() => {
-        const container = scrollRef.current;
-        if (container) {
-            // Jump to bottom instantly (level 1 is at the bottom)
-            container.scrollTop = container.scrollHeight;
-        }
-    }, []);
+    // The highest visible level: current + 3 (can't scroll beyond this)
+    const maxVisibleLevel = currentLevel + 3;
 
-    // After paint, smooth-scroll to current level
+    // On mount: instantly position scroll so the current level is centered.
+    // No animation, no jump — the user never sees any other position.
     useLayoutEffect(() => {
-        // Small delay to ensure layout is settled after the initial scroll-to-bottom
-        const timer = setTimeout(() => {
-            if (currentLevelRef.current) {
-                currentLevelRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Use requestAnimationFrame to ensure DOM has painted the nodes
+        requestAnimationFrame(() => {
+            if (currentLevelRef.current && scrollRef.current) {
+                const container = scrollRef.current;
+                const node = currentLevelRef.current;
+                const nodeRect = node.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                // Calculate where the node is relative to the scroll container
+                const nodeOffsetTop = node.offsetTop || (nodeRect.top - containerRect.top + container.scrollTop);
+                const targetScroll = nodeOffsetTop - container.clientHeight / 2 + node.clientHeight / 2;
+                container.scrollTop = targetScroll;
             }
-        }, 100);
-        return () => clearTimeout(timer);
+        });
     }, [currentLevel]);
+
+    // Clamp scroll: prevent scrolling above maxVisibleLevel
+    const handleScroll = useCallback(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+        // Find the sentinel element for the max visible level
+        const sentinel = container.querySelector(`[data-level="${maxVisibleLevel + 1}"]`);
+        if (sentinel) {
+            const sentinelRect = sentinel.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            // If the sentinel is visible (scrolled too far up), push back down
+            if (sentinelRect.bottom > containerRect.top) {
+                const sentinelEl = sentinel as HTMLElement;
+                const maxScroll = sentinelEl.offsetTop - container.clientHeight;
+                if (container.scrollTop < maxScroll) {
+                    container.scrollTop = maxScroll;
+                }
+            }
+        }
+    }, [maxVisibleLevel]);
+
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+        container.addEventListener('scroll', handleScroll, { passive: true });
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
 
     // Reversed so level 1 is at the bottom
     const reversedLevels = [...TRACK_LEVELS].map((lvl, i) => ({ ...lvl, levelNum: i + 1 })).reverse();
 
-    // Precompute which reversed indices start a new biome (so we don't mutate during render)
+    // Precompute biome divider positions
     const biomeDividerSet = new Set<number>();
     {
         let prev = -1;
@@ -63,7 +91,7 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                 className="relative max-h-[60vh] overflow-y-auto px-4 py-6 rounded-2xl"
                 style={{ scrollbarWidth: 'thin' }}
             >
-                {/* MASTER trophy at the top */}
+                {/* MASTER trophy at the top — only shown if near top */}
                 <div className="flex flex-col items-center mb-6">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-4 border-amber-300 flex items-center justify-center shadow-lg shadow-amber-400/30">
                         <span className="text-2xl">🏆</span>
@@ -78,9 +106,7 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                         const stars = trackStars[levelNum] || 0;
                         const isCompleted = stars > 0;
                         const isCurrent = levelNum === currentLevel;
-                        // Lock levels beyond current + 2
                         const isLocked = levelNum > currentLevel + 2;
-                        // Semi-locked: visible but dimmed (current+1, current+2)
                         const isSemiLocked = !isLocked && levelNum > currentLevel && !isCompleted;
 
                         const biome = getBiomeForLevel(levelNum);
@@ -97,7 +123,7 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                         return (
                             <React.Fragment key={levelNum}>
                                 {/* Biome transition divider */}
-                                {showBiomeDivider && revIdx > 0 && (
+                                {showBiomeDivider && (
                                     <div className="flex items-center gap-3 my-4 w-full px-4">
                                         <div className="flex-1 h-px bg-foreground/10" />
                                         <span className="text-lg">{biome.emoji}</span>
@@ -106,18 +132,11 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                                         <div className="flex-1 h-px bg-foreground/10" />
                                     </div>
                                 )}
-                                {/* Render biome name for the very first node too */}
-                                {showBiomeDivider && revIdx === 0 && (
-                                    <div className="flex items-center gap-3 mb-4 w-full px-4">
-                                        <div className="flex-1 h-px bg-foreground/10" />
-                                        <span className="text-lg">{biome.emoji}</span>
-                                        <span className="text-xs font-black uppercase tracking-widest text-foreground/40">{biome.name}</span>
-                                        <span className="text-lg">{biome.emoji}</span>
-                                        <div className="flex-1 h-px bg-foreground/10" />
-                                    </div>
-                                )}
 
-                                <div className="relative flex flex-col items-center w-full">
+                                <div
+                                    className="relative flex flex-col items-center w-full"
+                                    data-level={levelNum}
+                                >
                                     {/* Connector line */}
                                     {revIdx > 0 && !showBiomeDivider && (
                                         <div
@@ -157,7 +176,6 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                                             ) : (
                                                 <>
                                                     <span className="text-base sm:text-lg font-black leading-none">{levelNum}</span>
-                                                    {/* Stars */}
                                                     {isCompleted && (
                                                         <div className="flex gap-[1px] -mt-0.5">
                                                             {[1, 2, 3].map(s => (
@@ -183,7 +201,7 @@ export const SudokuTrack: React.FC<SudokuTrackProps> = ({ onSelectLevel }) => {
                                         {/* Level label */}
                                         <span className={`
                                             text-[8px] sm:text-[9px] font-bold uppercase tracking-wider mt-1
-                                            ${isLocked ? 'text-foreground/15' : isCompleted ? 'text-foreground/40' : 'text-foreground/40'}
+                                            ${isLocked ? 'text-foreground/15' : 'text-foreground/40'}
                                         `}>
                                             {lvl.label}
                                         </span>

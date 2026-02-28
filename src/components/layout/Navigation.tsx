@@ -13,11 +13,11 @@ const links = [
 
 function NavIcon({ icon, name, isActive }: { icon: string; name: string; isActive: boolean }) {
     return (
-        <div className={`relative w-14 h-14 transition-all duration-200 ${isActive ? 'scale-110 drop-shadow-[0_0_10px_rgba(13,148,136,0.6)]' : 'opacity-60'}`}>
+        <div className={`relative w-16 h-16 transition-all duration-200 ${isActive ? 'scale-110 drop-shadow-[0_0_10px_rgba(13,148,136,0.6)]' : 'opacity-70'}`}>
             <Icon assetKey={icon} size="none" className="w-full h-full" />
             {/* Label overlaid at the bottom of the icon — Pokemon style */}
             <span
-                className="game-label absolute bottom-0.5 left-0 right-0 text-center text-[9px] font-black text-white leading-none tracking-wide pointer-events-none"
+                className="game-label absolute -bottom-0.5 left-0 right-0 text-center text-[10px] font-black text-white leading-none tracking-wide pointer-events-none"
             >
                 {name.toUpperCase()}
             </span>
@@ -69,9 +69,9 @@ export const Navigation = () => {
                                     }`}
                             >
                                 {/* Icon with overlay label */}
-                                <div className="relative w-9 h-9 shrink-0">
+                                <div className="relative w-11 h-11 shrink-0">
                                     <Icon assetKey={link.icon} size="none" className="w-full h-full" />
-                                    <span className="game-label absolute bottom-0 left-0 right-0 text-center text-[7px] font-black text-white leading-none pointer-events-none">
+                                    <span className="game-label absolute bottom-0 left-0 right-0 text-center text-[8px] font-black text-white leading-none pointer-events-none">
                                         {link.name.toUpperCase()}
                                     </span>
                                 </div>

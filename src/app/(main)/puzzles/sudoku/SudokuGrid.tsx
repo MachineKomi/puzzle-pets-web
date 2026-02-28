@@ -56,7 +56,7 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, size, selectedCell
     const blockCols = size === 4 ? 2 : 3;
 
     return (
-        <div className={`grid ${gridClass} ${size === 9 ? 'gap-[2px]' : 'gap-1'} bg-black/20 dark:bg-white/20 p-1.5 sm:p-3 rounded-xl shadow-inner w-full h-full max-w-full max-h-full aspect-square mx-auto`}>
+        <div className={`grid ${gridClass} ${size === 9 ? 'gap-[2px]' : 'gap-1'} bg-black/15 dark:bg-white/20 p-1.5 sm:p-2 rounded-xl shadow-inner aspect-square mx-auto max-h-full max-w-full`} style={{ width: 'min(100%, 100%)' }}>
             {grid.map((row, rIdx) =>
                 row.map((cell, cIdx) => {
                     const isSelected = selectedCell?.r === rIdx && selectedCell?.c === cIdx;

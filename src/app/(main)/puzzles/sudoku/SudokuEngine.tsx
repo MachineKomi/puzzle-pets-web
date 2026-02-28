@@ -82,8 +82,6 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
         // Save coordinate if provided by the mouse event for particle origin
         if (e && e.currentTarget) {
             const rect = e.currentTarget.getBoundingClientRect();
-            // Store it semi-globally just for this specific cell's interaction 
-            // We'll write it to a localized data attribute on the container so the NumberPad input can read it
             document.documentElement.dataset.lastActiveX = String(rect.left + rect.width / 2);
             document.documentElement.dataset.lastActiveY = String(rect.top + rect.height / 2);
         }
@@ -149,7 +147,6 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
         // eslint-disable-next-line react-hooks/immutability
         state.grid = newGrid;
-        // eslint-disable-next-line react-hooks/immutability
         state.mistakes += 1; // Penalty for hint
         logEvent('hint', { row: target.r, col: target.c });
         setSelectedCell({ r: target.r, c: target.c });
@@ -182,7 +179,6 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
             if (num !== null && num !== targetCell.solution) {
                 cell.isError = true;
                 logEvent('mistake', { row: r, col: c, input: num, solution: targetCell.solution });
-                // eslint-disable-next-line react-hooks/immutability
                 state.mistakes += 1;
 
                 // Trigger Sad Pet
@@ -194,7 +190,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
                 // Track newly placed cell for simple thumping
                 setRecentlyPlaced({ r, c });
-                setTimeout(() => setRecentlyPlaced(null), 1000); // 1s matches CSS .animate-gem-flash
+                setTimeout(() => setRecentlyPlaced(null), 1000);
 
                 if (num !== null) {
                     logEvent('correct_input', { row: r, col: c, value: num });
@@ -202,7 +198,7 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                     setIsPetHappy(true);
                     setTimeout(() => setIsPetHappy(false), 2000);
 
-                    // Fire localized sparkles 
+                    // Fire localized sparkles
                     const x = parseFloat(document.documentElement.dataset.lastActiveX || "0");
                     const y = parseFloat(document.documentElement.dataset.lastActiveY || "0");
 
@@ -219,7 +215,6 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
             newGrid[r][c] = cell;
         }
 
-        // eslint-disable-next-line react-hooks/immutability
         state.grid = newGrid;
         setSelectedCell({ r, c });
 
@@ -274,13 +269,12 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
                 // Quick map for gem colours
                 const colors: Record<number, string> = {
-                    1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6'
+                    1: '#ef4444', 2: '#f59e0b', 3: '#fbbf24', 4: '#10b981', 5: '#3b82f6', 6: '#8b5cf6', 7: '#ec4899', 8: '#14b8a6', 9: '#f97316'
                 };
 
                 // Fire localized bursts with a slight delay so they don't stack on the single-gem burst
                 setTimeout(() => {
                     const bursts = newCompleted.map((nc, idx) => {
-                        // Query the actual cell's DOM position by its aria-label
                         const cellEl = document.querySelector(`[aria-label="Cell ${nc.r}-${nc.c}"]`);
                         let cx = 0, cy = 0;
                         if (cellEl) {
@@ -309,12 +303,21 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
 
         if (!isNotesMode) checkWin(newGrid);
 
-    }, [state, selectedCell, activeSession, isNotesMode, pushHistory, logEvent, gridSize, checkWin]);
+    }, [state, selectedCell, activeSession, isNotesMode, pushHistory, logEvent, gridSize, checkWin, gainXp]);
 
     if (!activeSession || !state) return null;
 
+    /*
+     * LAYOUT STRATEGY — viewport-budget approach:
+     * Mobile: header(40px) + grid(flex) + numpad(fixed ~90px) + nav(~70px safe area) = 100dvh
+     * Desktop: side-by-side — grid left, controls right, all in one viewport height
+     *
+     * The grid is the only flexible element. It gets an explicit max-height
+     * computed from the remaining viewport budget so it can NEVER overflow.
+     */
+
     return (
-        <div className="flex flex-col min-h-0 animate-in fade-in zoom-in duration-500 pb-4 relative max-h-[calc(100dvh-8rem)] sm:max-h-none overflow-hidden">
+        <div className="sudoku-layout relative">
 
             {activeBurst && (
                 <ParticleBurst
@@ -334,26 +337,33 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                 />
             ))}
 
-            {/* Header Info */}
-            <div className="flex justify-between items-center bg-panel p-3 sm:p-4 rounded-xl shadow-sm border border-black/5 dark:border-white/5 shrink-0 mb-2 sm:mb-4">
-                <div>
-                    <div className="text-sm text-foreground/70 uppercase tracking-wider font-bold">
-                        {gridSize}x{gridSize} • {difficulty}
-                    </div>
-                    <div className="text-danger font-bold">
-                        Mistakes: {state.mistakes}
-                    </div>
+            {/* Compact header — single line on mobile */}
+            <div className="sudoku-header flex justify-between items-center bg-panel px-3 py-2 rounded-xl shadow-sm border border-black/5 dark:border-white/5">
+                <div className="flex items-center gap-3">
+                    <span className="text-xs text-foreground/50 uppercase tracking-wider font-bold">
+                        {gridSize}×{gridSize} • {difficulty}
+                    </span>
+                    <span className="text-xs text-danger font-bold">
+                        ❌ {state.mistakes}
+                    </span>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={handleHint}><Icon assetKey="ui/hint_icon" size="sm" className="inline-block mr-1" /> Hint</Button>
-                    <Button variant="ghost" size="sm" onClick={handleUndo} disabled={history.length === 0}>↩️ Undo</Button>
-                    <Button variant="danger" size="sm" onClick={() => abandonSession()}>Forfeit</Button>
+                <div className="flex gap-1.5">
+                    <Button variant="ghost" size="sm" onClick={handleHint} className="!px-2 !py-1 !text-xs">
+                        <Icon assetKey="ui/hint_icon" size="sm" className="inline-block mr-0.5" /> Hint
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleUndo} disabled={history.length === 0} className="!px-2 !py-1 !text-xs">
+                        ↩️
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={() => abandonSession()} className="!px-2 !py-1 !text-xs">
+                        ✕
+                    </Button>
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-2 sm:gap-6 flex-1 items-center justify-center min-h-0 overflow-hidden">
-                {/* Main Grid Area — constrained on mobile so it doesn't push controls off screen */}
-                <div className="w-full max-w-[min(100%,45dvh)] sm:max-w-[min(100%,55vh)] lg:max-w-none lg:flex-1 lg:h-full flex items-center justify-center min-h-0 shrink">
+            {/* Main play area */}
+            <div className="sudoku-play-area flex flex-col lg:flex-row gap-2 lg:gap-6 items-center justify-center">
+                {/* Grid — the flex child that sizes itself to the budget */}
+                <div className="sudoku-grid-container flex items-center justify-center">
                     <SudokuGrid
                         grid={state.grid}
                         size={gridSize}
@@ -364,8 +374,8 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                     />
                 </div>
 
-                {/* Input Controls Area */}
-                <div className="w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-2 sm:gap-4 shrink-0">
+                {/* Controls — fixed height, never flexes */}
+                <div className="sudoku-controls w-full lg:w-64 lg:shrink-0 flex flex-col justify-center gap-2">
                     {/* Pet — hidden on mobile to save space, visible on desktop */}
                     <div className="hidden lg:block">
                         <PuzzleCompanion isHappy={isPetHappy} isSad={isPetSad} />
@@ -379,7 +389,6 @@ export const SudokuEngine: React.FC<SudokuEngineProps> = ({ difficulty, gridSize
                     />
                 </div>
             </div>
-
         </div>
     );
 };
